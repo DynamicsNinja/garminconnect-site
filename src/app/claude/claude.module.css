@@ -1,7 +1,7 @@
 .head { text-align: center; padding: 48px 0 24px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .head h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.15; margin: 0; }
 .head p { margin: 0; color: var(--muted); }
-.head > div { max-width: 560px; }
+.head > div { max-width: 560px; width: 100%; padding-bottom: 14px; }
 .tablist { display: flex; gap: 4px; border-bottom: 1px solid var(--border); overflow-x: auto; margin-top: 16px; }
 .tab { font: inherit; font-size: 15px; font-weight: 600; background: none; border: 0; border-bottom: 3px solid transparent; padding: 10px 14px; color: var(--muted); cursor: pointer; white-space: nowrap; }
 .tab[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }

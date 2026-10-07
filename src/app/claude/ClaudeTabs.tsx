@@ -1,13 +1,10 @@
 "use client";
-import { useState, useSyncExternalStore, type KeyboardEvent, type ReactNode } from "react";
+import { useState, type KeyboardEvent, type ReactNode } from "react";
 import { TABS, type TabId } from "./tabs";
 import styles from "./claude.module.css";
 
-const noop = () => () => {};
-
 export function ClaudeTabs({ initial, panels }: { initial: TabId; panels: Record<TabId, ReactNode> }) {
   const [active, setActive] = useState<TabId>(initial);
-  const js = useSyncExternalStore(noop, () => true, () => false);
 
   function select(id: TabId, focus = false) {
     setActive(id);
@@ -27,7 +24,8 @@ export function ClaudeTabs({ initial, panels }: { initial: TabId; panels: Record
 
   return (
     <div>
-      {js && (
+      <>
+        <noscript><style>{"[data-claude-panel][hidden]{display:block!important}"}</style></noscript>
         <div role="tablist" aria-label="Where do you use Claude?" className={styles.tablist}>
           {TABS.map((t, i) => (
             <button
@@ -46,17 +44,17 @@ export function ClaudeTabs({ initial, panels }: { initial: TabId; panels: Record
             </button>
           ))}
         </div>
-      )}
+      </>
       {TABS.map((t) => (
         <section
           key={t.id}
           id={t.id}
           className={styles.panel}
-          role={js ? "tabpanel" : undefined}
-          aria-labelledby={js ? `tab-${t.id}` : undefined}
-          hidden={js && active !== t.id}
+          data-claude-panel
+          role="tabpanel"
+          aria-labelledby={`tab-${t.id}`}
+          hidden={active !== t.id}
         >
-          {!js && <h3>{t.label}</h3>}
           {panels[t.id]}
         </section>
       ))}
