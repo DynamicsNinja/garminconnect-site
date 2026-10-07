@@ -17,14 +17,14 @@ export async function DocsNav() {
     <details className={`docs-menu ${styles.menu}`}>
       <summary>Docs menu</summary>
       <nav aria-label="Documentation" className={styles.nav}>
-        <h2>Guides</h2>
+        <p className={styles.navHead}>Guides</p>
         <ul>{GUIDES.map(([h, t]) => <li key={h}><NavLink href={h}>{t}</NavLink></li>)}</ul>
-        <h2>API</h2>
+        <p className={styles.navHead}>API</p>
         <ul>
           <li><NavLink href="/docs/api">API by category</NavLink></li>
           {api.map((p) => <li key={p.route}><NavLink href={p.route}>{p.title}</NavLink></li>)}
         </ul>
-        <h2>Reference</h2>
+        <p className={styles.navHead}>Reference</p>
         <ul><li><NavLink href="/docs/reference">All methods</NavLink></li></ul>
         <ul className={styles.navLast}><li><NavLink href="/docs/changelog">Changelog</NavLink></li></ul>
       </nav>

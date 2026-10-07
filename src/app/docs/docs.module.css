@@ -1,7 +1,10 @@
 .shell { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 32px; padding-top: 24px; padding-bottom: 64px; }
 .content { min-width: 0; }
 .body { display: grid; grid-template-columns: minmax(0, 1fr) 200px; gap: 32px; align-items: start; }
-.body > :global(.prose) { min-width: 0; max-width: 760px; }
+.main { min-width: 0; max-width: 760px; }
+.pageTitle { margin: 0 0 16px; overflow-wrap: anywhere; }
+.methodList { columns: 2 220px; list-style: none; padding: 0; }
+.methodList li { margin: 2px 0; break-inside: avoid; overflow-wrap: anywhere; }
 .tocSlot { position: sticky; top: 72px; max-height: calc(100vh - 88px); overflow-y: auto; font-size: 14px; }
 .toc ul { list-style: none; margin: 0; padding: 0; }
 .toc li { margin: 6px 0; }
@@ -11,8 +14,8 @@
 .tocSub { padding-left: 12px; }
 .menu > summary { display: none; }
 .nav { position: sticky; top: 72px; font-size: 15px; }
-.nav h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 20px 0 6px; }
-.nav h2:first-child { margin-top: 0; }
+.navHead { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 20px 0 6px; }
+.navHead:first-child { margin-top: 0; }
 .nav ul { list-style: none; margin: 0; padding: 0; }
 .nav a { display: block; padding: 4px 8px; margin: 0 -8px; border-radius: 6px; color: var(--fg); text-decoration: none; }
 .nav a:hover { background: var(--bg-subtle); }
@@ -44,6 +47,7 @@
   .nav { position: static; padding-bottom: 12px; }
 }
 @media (min-width: 861px) {
+  details.menu::details-content { content-visibility: visible; display: contents; }
   /* The menu is always open on wide screens; its summary is hidden above. */
   .menu > :not(summary) { display: block !important; }
 }
