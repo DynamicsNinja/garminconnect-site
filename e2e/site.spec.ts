@@ -63,6 +63,18 @@ test("search finds a method", async ({ page }) => {
   await expect(page).toHaveURL(/\/docs\/reference\/getSleepData/);
 });
 
+test("search: Enter pressed while the index is loading still navigates", async ({ page }) => {
+  await page.route("**/search-index.json", async (route) => {
+    await new Promise((r) => setTimeout(r, 800));
+    await route.continue();
+  });
+  await page.goto("/docs");
+  await page.getByRole("button", { name: /Search/ }).click();
+  await page.getByRole("combobox", { name: "Search docs" }).fill("getSleepData");
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/docs\/reference\/getSleepData/);
+});
+
 test("demo shows sample data", async ({ page }) => {
   await page.goto("/demo");
   await expect(page.locator("main svg").first()).toBeVisible();

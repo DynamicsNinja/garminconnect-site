@@ -22,11 +22,12 @@ export function Search() {
   const listId = `${uid}-list`;
   const optId = (i: number) => `${uid}-opt-${i}`;
 
-  const show = useCallback(() => {
-    const d = dialog.current;
-    if (d && !d.open) d.showModal();
-    setOpen(true);
-    if (engine || status === "loading") return;
+  const started = useRef(false);
+  const pending = useRef(false);
+
+  const load = useCallback(() => {
+    if (started.current) return;
+    started.current = true;
     setStatus("loading");
     fetch("/search-index.json")
       .then((r) => { if (!r.ok) throw new Error(String(r.status)); return r.json() as Promise<SearchDoc[]>; })
@@ -36,8 +37,15 @@ export function Search() {
         setEngine(ms);
         setStatus("ready");
       })
-      .catch(() => setStatus("error"));
-  }, [engine, status]);
+      .catch(() => { started.current = false; pending.current = false; setStatus("error"); });
+  }, []);
+
+  const show = useCallback(() => {
+    const d = dialog.current;
+    if (d && !d.open) d.showModal();
+    setOpen(true);
+    load();
+  }, [load]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -72,16 +80,22 @@ export function Search() {
     router.push(h.route);
   };
 
+  useEffect(() => {
+    if (!pending.current || !engine) return;
+    pending.current = false;
+    go(hits[0]);
+  });
+
   const onInputKey = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") { e.preventDefault(); setActive(Math.min(sel + 1, hits.length - 1)); }
     else if (e.key === "ArrowUp") { e.preventDefault(); setActive(Math.max(sel - 1, 0)); }
     else if (e.key === "Escape") { e.preventDefault(); close(); }
-    else if (e.key === "Enter") { e.preventDefault(); go(hits[sel]); }
+    else if (e.key === "Enter") { e.preventDefault(); if (!engine && status !== "error") pending.current = true; else go(hits[sel]); }
   };
 
   return (
     <>
-      <button ref={trigger} type="button" className="search-btn" onClick={show} aria-haspopup="dialog" aria-label="Search">
+      <button ref={trigger} type="button" className="search-btn" onClick={show} onPointerEnter={load} onFocus={load} aria-haspopup="dialog" aria-label="Search">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
           <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
         </svg>
