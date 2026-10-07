@@ -6,3 +6,5 @@ playwright-report/
 .env*.local
 .env
 .garmin-tokens/
+*.tsbuildinfo
+next-env.d.ts

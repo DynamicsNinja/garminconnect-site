@@ -3,6 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
+  outputFileTracingRoot: import.meta.dirname,
+  turbopack: { root: import.meta.dirname },
   // The docs pipeline reads these packages' files from node_modules at build time.
   outputFileTracingIncludes: {
     "/docs/**": ["./node_modules/garminconnect-js/**/*.md", "./node_modules/@dynamicsninja/garminconnect-mcp/README.md"],

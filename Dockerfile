@@ -1,4 +1,5 @@
 FROM node:22-slim AS build
+ENV NEXT_TELEMETRY_DISABLED=1
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
