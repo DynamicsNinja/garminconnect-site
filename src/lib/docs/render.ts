@@ -10,7 +10,7 @@ import { visit } from "unist-util-visit";
 import type { Element, Root } from "hast";
 import { resolveLink, rewriteSrcset, type LinkContext, type LinkTarget } from "./links";
 
-const EMOJI = /\p{Emoji_Presentation}|\p{Extended_Pictographic}\uFE0F|[\uFE0F\u200D\u20E3]/gu;
+const EMOJI = /\p{Emoji_Presentation}|\p{Emoji_Modifier}|\p{Extended_Pictographic}\uFE0F|[\uFE0F\u200D\u20E3]/gu;
 
 /** Removes emoji from text outside code and pre. Runs after rehype-slug, so the GitHub ids keep their emoji. */
 export function stripEmoji() {
