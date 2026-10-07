@@ -200,13 +200,3 @@ div.demo {
   border-radius: 12px;
   color: var(--text-secondary);
 }
-
-.footer {
-  margin-top: 32px;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-
-.footer a {
-  color: inherit;
-}

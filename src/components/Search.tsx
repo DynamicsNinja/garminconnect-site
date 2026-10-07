@@ -106,7 +106,7 @@ export function Search() {
         ref={dialog}
         className="search-dialog"
         aria-label="Search documentation"
-        onClose={() => { setOpen(false); setQuery(""); setActive(0); trigger.current?.focus(); }}
+        onClose={() => { pending.current = false; setOpen(false); setQuery(""); setActive(0); trigger.current?.focus(); }}
         onClick={(e) => { if (e.target === dialog.current) close(); }}
       >
         {open && (

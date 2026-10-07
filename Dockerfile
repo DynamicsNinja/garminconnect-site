@@ -14,4 +14,5 @@ COPY --from=build /app/.next/static ./.next/static
 COPY --from=build /app/public ./public
 USER node
 EXPOSE 3000
+HEALTHCHECK CMD node -e "fetch('http://127.0.0.1:'+(process.env.PORT||3000)+'/').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"
 CMD ["node", "server.js"]

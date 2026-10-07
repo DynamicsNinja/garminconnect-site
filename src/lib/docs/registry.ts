@@ -2,7 +2,7 @@ import "server-only";
 import GithubSlugger from "github-slugger";
 import { README_PAGES, README_REDIRECTS, splitReadme, normalizeHeading } from "./readme";
 import { apiCategoryFiles, libVersion, readSource } from "./sources";
-import { renderMarkdown, type Rendered } from "./render";
+import { assertSafeHtml, renderMarkdown, type Rendered } from "./render";
 import type { LinkContext, LinkTarget } from "./links";
 
 export interface DocPage { route: string; title: string; html: string; headings: Rendered["headings"]; sourceRepoPath: string }
@@ -48,6 +48,7 @@ async function build() {
   const links = new Map<string, LinkTarget[]>();
   const add = async (route: string, title: string, md: string, repoPath: string) => {
     const r = await renderMarkdown(md, repoPath, ctx);
+    assertSafeHtml(r.html, route); // fails the build, naming the page
     pages.set(route, { route, title, html: r.html, headings: r.headings, sourceRepoPath: repoPath });
     links.set(route, r.links);
   };

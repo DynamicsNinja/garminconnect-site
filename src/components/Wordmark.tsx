@@ -1,9 +1,9 @@
-/** The README wordmark; the dark variant is swapped in by CSS (prefers-color-scheme). */
+/** The README wordmark. One <img> (so the home link always has a name); <picture> swaps in the dark file. */
 export function Wordmark({ className }: { className?: string }) {
   return (
-    <span className={`wordmark ${className ?? ""}`}>
-      <img src="/brand/title-light.svg" alt="garminconnect-js" className="wordmark-light" width={705} height={136} />
-      <img src="/brand/title-dark.svg" alt="" aria-hidden="true" className="wordmark-dark" width={705} height={136} />
-    </span>
+    <picture className={`wordmark ${className ?? ""}`}>
+      <source srcSet="/brand/title-dark.svg" media="(prefers-color-scheme: dark)" />
+      <img src="/brand/title-light.svg" alt="garminconnect-js" width={705} height={136} />
+    </picture>
   );
 }

@@ -20,8 +20,8 @@ export function LoginForm({ mode, notice }: { mode: Mode; notice?: string }) {
       {mode === "public" ? (
         <div className={styles.lead}>
           <p>
-            This site runs the open-source{" "}
-            <a href="https://github.com/DynamicsNinja/garminconnect-nextjs-starter">garminconnect-nextjs-starter</a>.
+            This demo is part of garmin.ficdev.xyz and runs the open-source{" "}
+            <a href="https://github.com/DynamicsNinja/garminconnect-js">garminconnect-js</a>.
             It is unofficial and not affiliated with Garmin.
           </p>
           <ul>

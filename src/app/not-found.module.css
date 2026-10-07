@@ -1,0 +1,5 @@
+.wrap { padding-top: 48px; padding-bottom: 16px; max-width: 640px; }
+.code { margin: 0; font: 600 14px ui-monospace, Menlo, Consolas, monospace; color: var(--muted); }
+.wrap h1 { margin: 4px 0 8px; color: var(--fg); }
+.lead { color: var(--muted); margin: 0 0 24px; }
+.links { display: flex; flex-wrap: wrap; gap: 12px; }
