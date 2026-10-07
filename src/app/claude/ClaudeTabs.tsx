@@ -1,10 +1,14 @@
 "use client";
-import { useState, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useState, type KeyboardEvent, type ReactNode } from "react";
 import { TABS, type TabId } from "./tabs";
 import styles from "./claude.module.css";
 
 export function ClaudeTabs({ initial, panels }: { initial: TabId; panels: Record<TabId, ReactNode> }) {
   const [active, setActive] = useState<TabId>(initial);
+
+  useEffect(() => {
+    document.getElementById(`tab-${active}`)?.scrollIntoView({ inline: "nearest", block: "nearest" });
+  }, [active]);
 
   function select(id: TabId, focus = false) {
     setActive(id);
