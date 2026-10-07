@@ -16,9 +16,9 @@ const PLOT_H = H - PAD.top - PAD.bottom;
 /** Formatters live here, not in props: a Server Component cannot pass functions to a Client one. */
 export type Unit = "score" | "hours" | "ms";
 const FORMAT: Record<Unit, (v: number | null) => string> = {
-  score: (v) => (v === null ? "—" : String(Math.round(v))),
+  score: (v) => (v === null ? "-" : String(Math.round(v))),
   hours: formatHours,
-  ms: (v) => (v === null ? "—" : `${Math.round(v)} ms`),
+  ms: (v) => (v === null ? "-" : `${Math.round(v)} ms`),
 };
 
 /** Clean round ticks from 0 to a nice max. */

@@ -12,7 +12,7 @@ import { seal, unseal } from "@/lib/demo/seal";
 export type LoginState = { step: "credentials" | "mfa"; error?: string };
 
 // The half-finished MFA login. `mfaState` holds no password, but it IS a live, partially
-// authenticated SSO session — so it is encrypted, httpOnly, short-lived, and deleted once used.
+// authenticated SSO session, so it is encrypted, httpOnly, short-lived, and deleted once used.
 const MFA_COOKIE = "garmin_mfa";
 // Browsers cap a cookie at ~4 KB. A sign-in that went through Garmin's web widget carries more
 // state than a mobile one, so the state is compressed before it is sealed.
@@ -50,7 +50,7 @@ function message(e: unknown, step: LoginState["step"]): string {
 
 /** One action for both steps, so the form has a single state: the MFA form posts a `code`. */
 export async function signIn(_prev: LoginState, form: FormData): Promise<LoginState> {
-  // Demo mode never renders the login form — but a Server Action is still a public POST endpoint,
+  // Demo mode never renders the login form, but a Server Action is still a public POST endpoint,
   // so without this a demo deployment would relay anyone's Garmin login attempts.
   if (MODE === "demo") return { step: "credentials", error: "Sign-in is disabled in demo mode." };
   const step = form.has("code") ? "mfa" : "credentials";

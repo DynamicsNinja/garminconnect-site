@@ -1,7 +1,7 @@
 import type { Night } from "./sleep";
 
 /**
- * Synthetic nights for `GARMIN_DEMO=1` — try the dashboard, or take screenshots, without an
+ * Synthetic nights for `GARMIN_DEMO=1`: try the dashboard, or take screenshots, without an
  * account and without anyone's real health data. Deterministic, so screenshots are repeatable.
  */
 export function demoNights(start: string, end: string): Night[] {

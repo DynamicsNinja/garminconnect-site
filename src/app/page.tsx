@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className="container">
       <section className={styles.hero}>
-        <h1>Garmin Connect for Claude — and for your code</h1>
+        <h1>Garmin Connect for Claude and for your code</h1>
         <p>Ask Claude about your sleep, training and workouts, or build with a zero-dependency TypeScript client.</p>
       </section>
       <div className={styles.doors}>

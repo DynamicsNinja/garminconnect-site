@@ -17,7 +17,7 @@ export function CopyUrl({ url }: { url: string }) {
         input.current?.select();
       },
     });
-    setStatus(result === "copied" ? "Copied" : "Selected — press Ctrl/⌘ C");
+    setStatus(result === "copied" ? "Copied" : "Selected: press Ctrl/⌘ C");
     clearTimeout(timer.current);
     timer.current = setTimeout(() => setStatus(""), 2000);
   }

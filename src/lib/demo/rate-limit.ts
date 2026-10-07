@@ -1,14 +1,14 @@
 // Server-only. A small in-memory, fixed-window rate limiter for sign-in attempts.
 //
 // A public page that forwards email + password to Garmin is attractive for credential stuffing,
-// and Garmin would blame — and eventually block — this server's IP, breaking sign-in for everyone.
+// and Garmin would blame (and eventually block) this server's IP, breaking sign-in for everyone.
 // In-memory is enough for one long-running instance (Dokploy, a VPS, `next start`); several
 // instances or a serverless host each keep their own counts, so use a shared store (Redis) there.
 //
 // Site change (the one deliberate difference from garminconnect-nextjs-starter): CLIENT_IP_HEADER.
 // Behind a Cloudflare Tunnel every request reaches Traefik from cloudflared, so `x-real-ip` is the
 // same for all visitors and the per-IP limit becomes global. Set CLIENT_IP_HEADER=cf-connecting-ip
-// to read the visitor's IP from Cloudflare instead — only safe when the app is reachable solely
+// to read the visitor's IP from Cloudflare instead, only safe when the app is reachable solely
 // through the tunnel, since anyone hitting it directly could set that header themselves.
 import { isIP } from "node:net";
 import { headers } from "next/headers";
@@ -32,7 +32,7 @@ function take(key: string, limit: number, now: number): boolean {
 
 /**
  * The client IP. `CLIENT_IP_HEADER` (when set and holding one valid IP) wins; otherwise the IP as
- * the reverse proxy reports it — Traefik (Dokploy) sets `x-real-ip`.
+ * the reverse proxy reports it: Traefik (Dokploy) sets `x-real-ip`.
  */
 export function clientIpFrom(h: { get(name: string): string | null }, trustedHeader: string | undefined): string {
   if (trustedHeader) {

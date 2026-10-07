@@ -14,7 +14,7 @@ const num = (v: unknown): number | null => (typeof v === "number" && Number.isFi
 
 /**
  * `getSleepDaily` returns one row per night with the numbers under `values`. The field names below
- * were read off a real account — the library types this row loosely because Garmin documents none
+ * were read off a real account; the library types this row loosely because Garmin documents none
  * of it.
  */
 export function toNights(rows: SleepDailyEntry[]): Night[] {
@@ -34,7 +34,7 @@ export function toNights(rows: SleepDailyEntry[]): Night[] {
     });
 }
 
-/** `YYYY-MM-DD` for today and `days - 1` days before it, in UTC — Garmin's calendar dates are UTC. */
+/** `YYYY-MM-DD` for today and `days - 1` days before it, in UTC: Garmin's calendar dates are UTC. */
 export function range(days: number): { start: string; end: string } {
   const end = new Date();
   const start = new Date(end.getTime() - (days - 1) * 86_400_000);
@@ -42,7 +42,7 @@ export function range(days: number): { start: string; end: string } {
 }
 
 export function formatHours(h: number | null): string {
-  if (h === null) return "—";
+  if (h === null) return "-";
   const whole = Math.floor(h);
   return `${whole}h ${String(Math.round((h - whole) * 60)).padStart(2, "0")}m`;
 }
