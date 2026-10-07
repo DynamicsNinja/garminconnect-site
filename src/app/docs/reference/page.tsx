@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { categories, methods } from "@/lib/reference";
 import { libVersion } from "@/lib/docs/sources";
 import { ReferenceTable } from "./ReferenceTable";
+import { MethodTable } from "./MethodTable";
 
 export const dynamic = "force-static";
 export const metadata: Metadata = { title: "Method reference" };
@@ -15,7 +16,8 @@ export default function ReferencePage() {
     <div>
       <h1>Method reference</h1>
       <p>{rows.length} methods · garminconnect-js {libVersion()}</p>
-      <Suspense fallback={<p>Loading methods…</p>}>
+      {/* Without JS (and before hydration) the fallback is the full, unfiltered table. */}
+      <Suspense fallback={<MethodTable shown={rows} total={rows.length} />}>
         <ReferenceTable rows={rows} categories={categories().map((c) => c.name)} />
       </Suspense>
     </div>

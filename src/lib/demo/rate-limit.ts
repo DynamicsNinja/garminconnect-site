@@ -4,6 +4,13 @@
 // and Garmin would blame — and eventually block — this server's IP, breaking sign-in for everyone.
 // In-memory is enough for one long-running instance (Dokploy, a VPS, `next start`); several
 // instances or a serverless host each keep their own counts, so use a shared store (Redis) there.
+//
+// Site change (the one deliberate difference from garminconnect-nextjs-starter): CLIENT_IP_HEADER.
+// Behind a Cloudflare Tunnel every request reaches Traefik from cloudflared, so `x-real-ip` is the
+// same for all visitors and the per-IP limit becomes global. Set CLIENT_IP_HEADER=cf-connecting-ip
+// to read the visitor's IP from Cloudflare instead — only safe when the app is reachable solely
+// through the tunnel, since anyone hitting it directly could set that header themselves.
+import { isIP } from "node:net";
 import { headers } from "next/headers";
 
 const WINDOW_MS = 15 * 60 * 1000;
@@ -23,10 +30,20 @@ function take(key: string, limit: number, now: number): boolean {
   return true;
 }
 
-/** The client IP as the reverse proxy reports it. Traefik (Dokploy) sets `x-real-ip`. */
-async function clientIp(): Promise<string> {
-  const h = await headers();
+/**
+ * The client IP. `CLIENT_IP_HEADER` (when set and holding one valid IP) wins; otherwise the IP as
+ * the reverse proxy reports it — Traefik (Dokploy) sets `x-real-ip`.
+ */
+export function clientIpFrom(h: { get(name: string): string | null }, trustedHeader: string | undefined): string {
+  if (trustedHeader) {
+    const v = h.get(trustedHeader.toLowerCase())?.trim();
+    if (v && isIP(v)) return v;
+  }
   return h.get("x-real-ip") ?? h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+}
+
+async function clientIp(): Promise<string> {
+  return clientIpFrom(await headers(), process.env.CLIENT_IP_HEADER);
 }
 
 /** `true` if this sign-in attempt may go ahead. Counts the attempt either way. */
