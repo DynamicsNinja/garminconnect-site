@@ -8,7 +8,7 @@ import rehypeShiki from "@shikijs/rehype";
 import rehypeStringify from "rehype-stringify";
 import { visit } from "unist-util-visit";
 import type { Element, Root } from "hast";
-import { resolveLink, type LinkContext, type LinkTarget } from "./links";
+import { resolveLink, rewriteSrcset, type LinkContext, type LinkTarget } from "./links";
 
 export interface Rendered { html: string; headings: { depth: number; id: string; text: string }[]; links: LinkTarget[] }
 
@@ -25,7 +25,10 @@ export async function renderMarkdown(markdown: string, fromRepoPath: string, ctx
       }
       const attr = node.tagName === "a" ? "href" : node.tagName === "img" || node.tagName === "source" ? (node.tagName === "img" ? "src" : "srcSet") : null;
       const value = attr ? node.properties[attr] : undefined;
-      if (attr && typeof value === "string" && value) {
+      if (attr === "srcSet" && typeof value === "string" && value) {
+        node.properties[attr] = rewriteSrcset(value, fromRepoPath, ctx);
+        for (const part of String(node.properties[attr]).split(",")) links.push({ route: part.trim().split(/\s+/)[0]! });
+      } else if (attr && typeof value === "string" && value) {
         const target = resolveLink(value, fromRepoPath, ctx, node.tagName === "a" ? "a" : "img");
         links.push(target);
         node.properties[attr] = target.anchor ? `${target.route}#${target.anchor}` : target.route;

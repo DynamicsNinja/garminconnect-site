@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { normalizeHeading, splitReadme, README_PAGES } from "@/lib/docs/readme";
-import { resolveLink, type LinkContext } from "@/lib/docs/links";
+import { resolveLink, rewriteSrcset, type LinkContext } from "@/lib/docs/links";
 import { getDocPages, checkLinks } from "@/lib/docs/registry";
 import { apiCategoryFiles, libVersion, readSource } from "@/lib/docs/sources";
 
@@ -30,6 +30,29 @@ describe("links", () => {
     expect(resolveLink("docs/assets/title-light.svg", "README.md", ctx, "img")).toEqual({ route: "https://raw.githubusercontent.com/DynamicsNinja/garminconnect-js/v9.9.9/docs/assets/title-light.svg" });
     expect(resolveLink("https://x.y/z", "README.md", ctx, "a")).toEqual({ route: "https://x.y/z" });
     expect(() => resolveLink("../../../etc/passwd", "docs/api/gear.md", ctx, "a")).toThrow(/escapes/);
+  });
+});
+
+describe("links (fix round 1)", () => {
+  const c2: LinkContext = {
+    version: "9.9.9",
+    routeForFile: (p, a) => (p === "README.md" && a === "ℹ️-about" ? "/docs" : p === "docs/foo bar.md" ? "/docs/api/foo" : p === "README.md" && a === "api" ? "/docs/reference" : null),
+    dropAnchor: (_p, route) => route === "/docs/reference",
+  };
+  it("decodes percent-encoded anchors and paths", () => {
+    expect(resolveLink("#%E2%84%B9%EF%B8%8F-about", "README.md", c2, "a")).toEqual({ route: "/docs", anchor: "ℹ️-about" });
+    expect(resolveLink("foo%20bar.md", "docs/README.md", c2, "a")).toEqual({ route: "/docs/api/foo" });
+    expect(resolveLink("#%E0%A4%A", "README.md", c2, "a").route).toContain("github.com");
+  });
+  it("rewrites every srcset candidate", () => {
+    expect(rewriteSrcset("docs/a.svg 1x, docs/b.svg 2x", "README.md", c2)).toBe(
+      "https://raw.githubusercontent.com/DynamicsNinja/garminconnect-js/v9.9.9/docs/a.svg 1x, https://raw.githubusercontent.com/DynamicsNinja/garminconnect-js/v9.9.9/docs/b.svg 2x");
+  });
+  it("passes through other schemes and protocol-relative urls", () => {
+    for (const h of ["tel:+1", "data:image/png;base64,AAA", "//cdn.x/y.js", "HTTPS://X.Y"]) expect(resolveLink(h, "README.md", c2, "a")).toEqual({ route: h });
+  });
+  it("drops the anchor for redirected sections", () => {
+    expect(resolveLink("#api", "README.md", c2, "a")).toEqual({ route: "/docs/reference" });
   });
 });
 

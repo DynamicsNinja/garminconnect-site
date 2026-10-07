@@ -41,7 +41,9 @@ async function build() {
     if (p === "mcp/README.md") return "/docs/self-host";
     return null;
   };
-  const ctx: LinkContext = { version, routeForFile };
+  const redirected = new Set(Object.values(README_REDIRECTS));
+  const dropAnchor = (p: string, route: string) => p === "README.md" && redirected.has(route);
+  const ctx: LinkContext = { version, routeForFile, dropAnchor };
   const pages = new Map<string, DocPage>();
   const links = new Map<string, LinkTarget[]>();
   const add = async (route: string, title: string, md: string, repoPath: string) => {
@@ -68,8 +70,12 @@ async function build() {
   return { pages, links };
 }
 
-export function getDocPages() { return (cache ??= build()).then((x) => x.pages); }
-export function getAllLinks() { return (cache ??= build()).then((x) => x.links); }
+function load() {
+  // A rejected build must not stay cached, so `next dev` recovers once the docs are fixed.
+  return (cache ??= build().catch((e: unknown) => { cache = null; throw e; }));
+}
+export function getDocPages() { return load().then((x) => x.pages); }
+export function getAllLinks() { return load().then((x) => x.links); }
 export async function getDocPage(route: string): Promise<DocPage> {
   const page = (await getDocPages()).get(route);
   if (!page) throw new Error(`No doc page ${route}`);
@@ -80,7 +86,7 @@ export function checkLinks(pages: Map<string, DocPage>, links: Map<string, LinkT
   const problems: string[] = [];
   const known = new Set(["/docs/reference", "/claude", "/demo", "/privacy", "/"]);
   for (const [from, list] of links) for (const l of list) {
-    if (/^(https?:|mailto:)/.test(l.route) || known.has(l.route)) continue;
+    if (/^([a-z][a-z0-9+.-]*:|\/\/)/i.test(l.route) || known.has(l.route)) continue;
     const page = pages.get(l.route);
     if (!page) { problems.push(`${from} → ${l.route} (no such page)`); continue; }
     if (l.anchor && !page.headings.some((h) => h.id === l.anchor) && !page.html.includes(`id="${l.anchor}"`) && !page.html.includes(`name="${l.anchor}"`)) {
