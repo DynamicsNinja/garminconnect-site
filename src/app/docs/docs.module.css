@@ -1,0 +1,59 @@
+.shell { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 32px; padding-top: 24px; padding-bottom: 64px; }
+.content { min-width: 0; }
+.body { display: grid; grid-template-columns: minmax(0, 1fr) 200px; gap: 32px; align-items: start; }
+.body > :global(.prose) { min-width: 0; max-width: 760px; }
+.tocSlot { position: sticky; top: 72px; max-height: calc(100vh - 88px); overflow-y: auto; font-size: 14px; }
+.toc ul { list-style: none; margin: 0; padding: 0; }
+.toc li { margin: 6px 0; }
+.toc a { color: var(--muted); text-decoration: none; }
+.toc a:hover { color: var(--fg); }
+.tocTitle { font-weight: 600; margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.tocSub { padding-left: 12px; }
+.menu > summary { display: none; }
+.nav { position: sticky; top: 72px; font-size: 15px; }
+.nav h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 20px 0 6px; }
+.nav h2:first-child { margin-top: 0; }
+.nav ul { list-style: none; margin: 0; padding: 0; }
+.nav a { display: block; padding: 4px 8px; margin: 0 -8px; border-radius: 6px; color: var(--fg); text-decoration: none; }
+.nav a:hover { background: var(--bg-subtle); }
+.nav a[aria-current="page"] { background: var(--bg-subtle); font-weight: 600; }
+.navLast { margin-top: 20px !important; }
+
+.crumbs { margin: 0 0 16px; font-size: 14px; }
+.tag { display: inline-block; font-size: 12px; padding: 1px 8px; border: 1px solid var(--border); border-radius: 999px; margin-right: 6px; color: var(--muted); }
+.title { margin: 0 0 8px; overflow-wrap: anywhere; }
+.tableWrap { overflow-x: auto; max-width: 100%; }
+.tableWrap table { border-collapse: collapse; width: 100%; font-size: 14px; }
+.tableWrap th, .tableWrap td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; align-items: center; }
+.chipLabel { font-size: 13px; color: var(--muted); margin-right: 4px; }
+.chip { font: inherit; font-size: 13px; padding: 3px 10px; border: 1px solid var(--border); border-radius: 999px; background: var(--bg); color: var(--fg); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.filter { font: inherit; padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; width: 100%; max-width: 360px; background: var(--bg); color: var(--fg); margin: 8px 0; }
+.sig { overflow-x: auto; padding: 12px 14px; background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 8px; font-size: 14px; }
+
+@media (max-width: 1100px) {
+  .body { grid-template-columns: minmax(0, 1fr); }
+  .tocSlot { display: none; }
+}
+@media (max-width: 860px) {
+  .shell { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .menu { border: 1px solid var(--border); border-radius: 8px; padding: 0 12px; }
+  .menu > summary { display: block; cursor: pointer; padding: 10px 0; font-weight: 600; }
+  .menu[open] > summary { border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+  .nav { position: static; padding-bottom: 12px; }
+}
+@media (min-width: 861px) {
+  /* The menu is always open on wide screens; its summary is hidden above. */
+  .menu > :not(summary) { display: block !important; }
+}
+
+:global(.prose) { line-height: 1.65; overflow-wrap: anywhere; }
+:global(.prose) h1, :global(.prose) h2, :global(.prose) h3, :global(.prose) h4 { scroll-margin-top: 72px; line-height: 1.25; }
+:global(.prose) h2 { margin-top: 2em; }
+:global(.prose) img { max-width: 100%; height: auto; }
+:global(.prose) table { display: block; overflow-x: auto; max-width: 100%; border-collapse: collapse; }
+:global(.prose) th, :global(.prose) td { padding: 6px 10px; border: 1px solid var(--border); text-align: left; }
+:global(.prose) :not(pre) > code { font-family: ui-monospace, monospace; font-size: .9em; background: var(--bg-subtle); padding: 1px 5px; border-radius: 4px; }
+:global(.prose) pre { max-width: 100%; overflow-x: auto; }
+:global(.prose) a { color: var(--link); }
