@@ -10,6 +10,29 @@ import { visit } from "unist-util-visit";
 import type { Element, Root } from "hast";
 import { resolveLink, rewriteSrcset, type LinkContext, type LinkTarget } from "./links";
 
+const EMOJI = /[\p{Extended_Pictographic}\uFE0F\u200D\u20E3]/gu;
+
+/** Removes emoji from text outside code and pre. Runs after rehype-slug, so the GitHub ids keep their emoji. */
+export function stripEmoji() {
+  return (tree: Root) => {
+    const walk = (parent: Root | Element) => {
+      if (parent.type === "element" && (parent.tagName === "pre" || parent.tagName === "code")) return;
+      parent.children.forEach((c, i) => {
+        if (c.type === "element") return walk(c);
+        if (c.type !== "text") return;
+        EMOJI.lastIndex = 0;
+        if (!EMOJI.test(c.value)) return;
+        EMOJI.lastIndex = 0;
+        let v = c.value.replace(EMOJI, "").replace(/[ \t]{2,}/g, " ");
+        if (i === 0) v = v.trimStart();
+        if (i === parent.children.length - 1) v = v.trimEnd();
+        c.value = v;
+      });
+    };
+    walk(tree);
+  };
+}
+
 export interface Rendered { html: string; headings: { depth: number; id: string; text: string }[]; links: LinkTarget[] }
 
 const textOf = (n: Element): string => n.children.map((c) => (c.type === "text" ? c.value : c.type === "element" ? textOf(c) : "")).join("");
@@ -39,7 +62,7 @@ export async function renderMarkdown(markdown: string, fromRepoPath: string, ctx
   const file = await unified()
     .use(remarkParse).use(remarkGfm)
     .use(remarkRehype, { allowDangerousHtml: true }).use(rehypeRaw)
-    .use(rehypeSlug).use(rewrite)
+    .use(rehypeSlug).use(stripEmoji).use(rewrite)
     .use(rehypeShiki, { themes: { light: "github-light", dark: "github-dark" }, defaultColor: false })
     .use(rehypeStringify)
     .process(markdown.replace(/<!--[\s\S]*?-->/g, ""));
