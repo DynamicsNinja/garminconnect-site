@@ -55,7 +55,7 @@ export default async function Home({
 
   return (
     <div className={styles.scope}>
-    <main className={styles.main}>
+    <div className={styles.main}>
       <p className={styles.siteNote}>
         This is the live demo of garminconnect-js. <Link href="/claude">→ Use it in Claude instead</Link>
       </p>
@@ -140,7 +140,7 @@ export default async function Home({
         Built with <a href="https://github.com/DynamicsNinja/garminconnect-js">garminconnect-js</a>.
         Unofficial — not affiliated with or endorsed by Garmin.
       </footer>
-    </main>
+    </div>
     </div>
   );
 }

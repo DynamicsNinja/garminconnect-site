@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://garmin.ficdev.xyz"),
@@ -11,7 +13,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <a href="#main" className="skip-to-content">Skip to content</a>
+        <Header />
+        <main id="main">
+          {children}
+        </main>
+        <Footer />
+      </body>
     </html>
   );
 }

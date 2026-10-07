@@ -9,7 +9,7 @@ export default async function Privacy() {
   await connection(); // read PRIVACY_CONTACT at request time, not build time
   const contact = process.env.PRIVACY_CONTACT;
   return (
-    <main style={{ maxWidth: 720, margin: "0 auto", padding: "32px 16px 48px", lineHeight: 1.55 }}>
+    <div style={{ maxWidth: 720, margin: "0 auto", padding: "32px 16px 48px", lineHeight: 1.55 }}>
       <h1>Privacy</h1>
       <p>
         Everything below is open source and can be checked against the code. This is unofficial and
@@ -84,6 +84,6 @@ export default async function Privacy() {
       <p style={{ marginTop: 32 }}>
         <Link href="/">← Back</Link>
       </p>
-    </main>
+    </div>
   );
 }
