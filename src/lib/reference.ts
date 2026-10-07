@@ -1,6 +1,5 @@
 import "server-only";
 import { GARMIN_METHODS } from "garminconnect-js/manifest";
-import { CONNECT_PLUS_METHODS } from "garminconnect-js";
 import { apiCategoryFiles, readSource } from "@/lib/docs/sources";
 
 export interface MethodRow {
@@ -24,6 +23,9 @@ export function typeOf(schema: Schema): string {
   if (Array.isArray(alts)) return alts.map(typeOf).join(" | ");
   if (Array.isArray(schema.enum)) return schema.enum.map((v) => JSON.stringify(v)).join(" | ");
   if (schema.format === "date-time") return "string (ISO date-time)";
+  if (Array.isArray(schema.type)) {
+    return [...new Set((schema.type as string[]).map((t) => typeOf({ type: t })))].join(" | ");
+  }
   switch (schema.type) {
     case "string":
     case "number":
@@ -42,23 +44,23 @@ export function typeOf(schema: Schema): string {
 
 const wrap = (t: string): string => (t.includes(" ") ? `(${t})` : t);
 
-let routes: Map<string, string> | undefined;
-function routeFor(name: string): string | null {
-  if (!routes) {
-    routes = new Map();
-    for (const file of apiCategoryFiles()) {
-      const { text } = readSource(file);
-      const route = "/" + file.replace(/\.md$/, "");
-      for (const m of GARMIN_METHODS) {
-        if (!routes.has(m.name) && (text.includes(`garmin.${m.name}(`) || text.includes(`
-## ${m.name}
+const fileTexts = new Map<string, string>();
+function mentions(file: string, name: string): boolean {
+  let text = fileTexts.get(file);
+  if (text === undefined) fileTexts.set(file, (text = readSource(file).text));
+  return text.includes(`garmin.${name}(`) || text.includes(`
+## ${name}
 `) || text.includes(`
-### ${m.name}
-`))) routes.set(m.name, route);
-      }
-    }
-  }
-  return routes.get(name) ?? null;
+### ${name}
+`);
+}
+
+function routeFor(name: string, category: string): string | null {
+  const files = apiCategoryFiles();
+  const own = `docs/api/${category}.md`;
+  const ordered = files.includes(own) ? [own, ...files.filter((f) => f !== own)] : files;
+  const hit = ordered.find((f) => mentions(f, name));
+  return hit ? "/" + hit.replace(/\.md$/, "") : null;
 }
 
 let cache: MethodRow[] | undefined;
@@ -68,16 +70,16 @@ export function methods(): MethodRow[] {
     .map((m) => {
       const params = m.params.map((p) => {
         const s = p.schema as Schema;
-        return { name: p.name, type: typeOf(s), optional: p.optional, ...(typeof s.description === "string" ? { description: s.description } : {}) };
+        return { name: p.name, type: p.role === "file" ? "Blob" : typeOf(s), optional: p.optional, ...(typeof s.description === "string" ? { description: s.description } : {}) };
       });
       return {
         name: m.name,
         toolName: toolName(m.name),
         category: m.category,
-        categoryRoute: routeFor(m.name),
+        categoryRoute: routeFor(m.name, m.category),
         description: m.description,
         safety: m.safety,
-        connectPlus: (CONNECT_PLUS_METHODS as readonly string[]).includes(m.name),
+        connectPlus: (m as { requiresConnectPlus?: boolean }).requiresConnectPlus === true,
         signature: `${m.name}(${params.map((p) => p.name + (p.optional ? "?" : "")).join(", ")})`,
         params,
       };

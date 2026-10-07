@@ -30,4 +30,21 @@ describe("reference", () => {
     expect(method("getSleepData")!.categoryRoute).toBe("/docs/api/wellness");
     expect(categories().reduce((n, c) => n + c.count, 0)).toBe(GARMIN_METHODS.length);
   });
+  it("handles array-valued JSON schema types", () => {
+    expect(typeOf({ type: ["integer", "string"] })).toBe("number | string");
+    expect(typeOf({ type: ["number", "integer"] })).toBe("number");
+  });
+  it("renders file params as Blob", () => {
+    expect(method("importActivity")!.params.find((p) => p.name === "file")!.type).toBe("Blob");
+  });
+  it("takes Connect+ from the manifest", () => {
+    const expected = GARMIN_METHODS.filter((m) => (m as { requiresConnectPlus?: boolean }).requiresConnectPlus === true).map((m) => m.name).sort();
+    expect(methods().filter((m) => m.connectPlus).map((m) => m.name).sort()).toEqual(expected);
+    expect(expected).toContain("logFood");
+  });
+  it("leaves no param typed unknown", () => {
+    // No exceptions today: file params are Blob, everything else has a concrete schema.
+    const unknown = methods().flatMap((m) => m.params.filter((p) => p.type === "unknown").map((p) => `${m.name}.${p.name}`));
+    expect(unknown).toEqual([]);
+  });
 });
