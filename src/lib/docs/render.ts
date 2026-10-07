@@ -45,3 +45,19 @@ export async function renderMarkdown(markdown: string, fromRepoPath: string, ctx
     .process(markdown.replace(/<!--[\s\S]*?-->/g, ""));
   return { html: String(file), headings, links };
 }
+
+/**
+ * Build-time guard. The docs are trusted input, but they are rendered with raw HTML allowed and the
+ * site sends no script-src CSP, so a script, an inline handler or a javascript: URL arriving with a
+ * docs update must fail the build instead of shipping. Checks real tags only: in text and code `<` is
+ * escaped, so `<script>` in a code sample is `&lt;script>` and never matches.
+ */
+export function assertSafeHtml(html: string, route: string): void {
+  const problems = new Set<string>();
+  for (const [tag] of html.matchAll(/<[a-zA-Z][^>]*>/g)) {
+    if (/^<script\b/i.test(tag)) problems.add("<script");
+    if (/\son[a-z]+\s*=/i.test(tag)) problems.add("an on[a-z]+= event handler");
+    if (/=\s*["']?\s*javascript:/i.test(tag)) problems.add("a javascript: URL");
+  }
+  if (problems.size) throw new Error(`Unsafe HTML in docs page ${route}: ${[...problems].join(", ")}`);
+}

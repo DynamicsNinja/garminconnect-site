@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { connection } from "next/server";
 import { GarminAuthError } from "garminconnect-js";
 import { logout } from "@/app/demo/actions";
@@ -9,6 +10,8 @@ import { getGarmin } from "@/lib/demo/garmin";
 import { MODE } from "@/lib/demo/mode";
 import { formatHours, range, toNights, type Night } from "@/lib/demo/sleep";
 import styles from "./page.module.css";
+
+export const metadata: Metadata = { title: "Live demo" };
 
 const RANGES = [7, 30, 90] as const;
 
@@ -135,11 +138,6 @@ export default async function Home({
           </section>
         </>
       )}
-
-      <footer className={styles.footer}>
-        Built with <a href="https://github.com/DynamicsNinja/garminconnect-js">garminconnect-js</a>.
-        Unofficial — not affiliated with or endorsed by Garmin.
-      </footer>
     </div>
     </div>
   );
