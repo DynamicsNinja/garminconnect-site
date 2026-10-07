@@ -156,7 +156,7 @@ export function Search() {
             )}
             {status === "ready" && query.trim() && hits.length === 0 && (
               <p className="search-empty">
-                No results — <Link href="/docs/reference" onClick={close}>try the reference</Link>
+                No results. <Link href="/docs/reference" onClick={close}>try the reference</Link>
               </p>
             )}
           </div>

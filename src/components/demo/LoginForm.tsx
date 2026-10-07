@@ -30,7 +30,7 @@ export function LoginForm({ mode, notice }: { mode: Mode; notice?: string }) {
             <li>The app only reads your sleep data. Sign out removes the cookie.</li>
           </ul>
           <p>
-            Rather not type your password into someone else&apos;s site? Fair — run the template
+            Rather not type your password into someone else&apos;s site? Fair, run the template
             locally instead. <Link href="/privacy">Privacy note</Link>.
           </p>
         </div>

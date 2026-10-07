@@ -4,7 +4,7 @@ import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:
 function key(): Buffer {
   const secret = process.env.SESSION_SECRET;
   if (!secret || secret.length < 32) {
-    throw new Error("SESSION_SECRET must be set to at least 32 characters — see .env.example");
+    throw new Error("SESSION_SECRET must be set to at least 32 characters, see .env.example");
   }
   return createHash("sha256").update(secret).digest();
 }

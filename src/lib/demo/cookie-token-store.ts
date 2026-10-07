@@ -1,5 +1,5 @@
-// Server-only. A TokenStore that keeps each visitor's Garmin tokens in THEIR browser — never on
-// the server — as an encrypted, httpOnly cookie.
+// Server-only. A TokenStore that keeps each visitor's Garmin tokens in THEIR browser, never on
+// the server, as an encrypted, httpOnly cookie.
 import { deflateRawSync, inflateRawSync } from "node:zlib";
 import { cookies } from "next/headers";
 import type { TokenStore, Tokens } from "garminconnect-js";

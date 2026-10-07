@@ -90,7 +90,7 @@ export default async function Home({
       {!garmin && MODE === "demo" && (
         <p className={styles.demo}>
           <strong>Live demo, synthetic data.</strong> To chart your own sleep and HRV, start from the{" "}
-          <a href="https://github.com/DynamicsNinja/garminconnect-nextjs-starter">template</a> — it
+          <a href="https://github.com/DynamicsNinja/garminconnect-nextjs-starter">template</a>, it
           runs locally and signs in to your own Garmin account.
         </p>
       )}
@@ -144,7 +144,7 @@ export default async function Home({
 }
 
 function Tile(props: { label: string; value: number | null; unit?: string; format?: (v: number | null) => string }) {
-  const text = props.format ? props.format(props.value) : props.value === null ? "—" : String(Math.round(props.value));
+  const text = props.format ? props.format(props.value) : props.value === null ? "-" : String(Math.round(props.value));
   return (
     <div className={styles.tile}>
       <span className={styles.tileLabel}>{props.label}</span>
