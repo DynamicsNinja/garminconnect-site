@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import MiniSearch from "minisearch";
@@ -18,7 +18,9 @@ export function Search() {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [active, setActive] = useState(0);
-
+  const uid = useId();
+  const listId = `${uid}-list`;
+  const optId = (i: number) => `${uid}-opt-${i}`;
 
   const show = useCallback(() => {
     const d = dialog.current;
@@ -40,6 +42,8 @@ export function Search() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        const t = e.target instanceof HTMLElement ? e.target : null;
+        if (e.repeat || e.defaultPrevented || t?.tagName === "TEXTAREA" || t?.isContentEditable) return;
         e.preventDefault();
         show();
       }
@@ -53,10 +57,14 @@ export function Search() {
   };
 
   const hits = useMemo<Hit[]>(
-    () => (engine && query.trim() ? (engine.search(query.trim()).slice(0, 10) as unknown as Hit[]) : []),
+    () => (engine && query.trim() ? (engine.search(query.trim()).slice(0, 10).map((r) => ({ id: r.id as string, route: r.route as string, title: r.title as string, section: r.section as string | undefined, kind: r.kind as Hit["kind"] }))) : []),
     [engine, query],
   );
   const sel = Math.min(active, Math.max(hits.length - 1, 0));
+
+  useEffect(() => {
+    if (open) document.getElementById(optId(sel))?.scrollIntoView({ block: "nearest" });
+  }, [open, sel, hits]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const go = (h: Hit | undefined) => {
     if (!h) return;
@@ -83,7 +91,7 @@ export function Search() {
       <dialog
         ref={dialog}
         className="search-dialog"
-        aria-label="Search"
+        aria-label="Search documentation"
         onClose={() => { setOpen(false); setQuery(""); setActive(0); trigger.current?.focus(); }}
         onClick={(e) => { if (e.target === dialog.current) close(); }}
       >
@@ -91,6 +99,11 @@ export function Search() {
           <div className="search-panel">
             <input
               type="search"
+              role="combobox"
+              aria-controls={hits.length > 0 ? listId : undefined}
+              aria-expanded={hits.length > 0}
+              aria-autocomplete="list"
+              aria-activedescendant={hits.length > 0 ? optId(sel) : undefined}
               autoFocus
               aria-label="Search docs"
               placeholder="Search docs and methods"
@@ -103,13 +116,18 @@ export function Search() {
             <div aria-live="polite" className="search-status">
               {status === "loading" && "Loading index…"}
               {status === "error" && "Could not load the search index."}
+              {status === "ready" && query.trim() && (hits.length > 0 ? `${hits.length} result${hits.length === 1 ? "" : "s"}` : "No results")}
             </div>
             {hits.length > 0 && (
-              <ul className="search-results" role="listbox" aria-label="Results">
+              <ul className="search-results" role="listbox" id={listId} aria-label="Results">
                 {hits.map((h, i) => (
-                  <li key={h.id} role="option" aria-selected={i === sel}>
+                  <li key={h.id} role="presentation">
                     <Link
                       href={h.route}
+                      role="option"
+                      id={optId(i)}
+                      aria-selected={i === sel}
+                      tabIndex={-1}
                       className={i === sel ? "active" : undefined}
                       onClick={(e) => { e.preventDefault(); go(h); }}
                       onMouseMove={() => setActive(i)}
