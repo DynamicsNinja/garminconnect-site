@@ -13,7 +13,7 @@
   --series-2: #eb6834;
   --accent: #2a78d6;
   --danger: #d03b3b;
-  min-height: 100vh;
+  color-scheme: light;
   background: var(--page);
   color: var(--text-primary);
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -25,12 +25,13 @@
   box-sizing: border-box;
 }
 
-.scope a {
+:where(.scope) a {
   color: var(--accent);
 }
 
 @media (prefers-color-scheme: dark) {
   .scope {
+    color-scheme: dark;
     --page: #0d0d0d;
     --surface-1: #1a1a19;
     --surface-2: #232322;
