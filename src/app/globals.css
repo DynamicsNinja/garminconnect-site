@@ -1,15 +1,15 @@
 :root {
   --fg: #1f2328; --muted: #59636e; --bg: #ffffff; --bg-subtle: #f6f8fa; --border: #d0d7de;
-  --accent: #0969DA; --accent-2: #0A8F7F; --radius: 10px;
+  --link: #0969DA; --accent: #0969DA; --accent-2: #0A8F7F; --radius: 10px;
   color-scheme: light dark;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --fg: #e6edf3; --muted: #9198a1; --bg: #0d1117; --bg-subtle: #161b22; --border: #30363d; }
+  :root { --fg: #e6edf3; --muted: #9198a1; --bg: #0d1117; --bg-subtle: #161b22; --border: #30363d; --link: #4493f8; }
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--fg); background: var(--bg); overflow-x: hidden; }
-a { color: var(--accent); }
+a { color: var(--link); }
 .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
 .mono, code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 8px; font-weight: 600; text-decoration: none; border: 1px solid transparent; cursor: pointer; font-size: 15px; }
@@ -18,11 +18,15 @@ a { color: var(--accent); }
 .btn:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 50%, transparent); outline-offset: 2px; }
 .site-header { border-bottom: 1px solid var(--border); background: var(--bg); position: sticky; top: 0; z-index: 10; }
 .site-header-inner { display: flex; align-items: center; gap: 16px; height: 56px; }
-.site-header nav { display: flex; gap: 16px; margin-left: auto; }
+.site-header-inner > * { min-width: 0; }
+.site-header nav { display: flex; gap: 16px; }
+#search-slot { margin-left: auto; flex-shrink: 0; }
 .site-header nav a { color: var(--fg); text-decoration: none; font-size: 15px; }
 .wordmark img { display: block; height: auto; }
 .wordmark-sm img { width: 170px; }
 .wordmark-dark { display: none !important; }
 @media (prefers-color-scheme: dark) { .wordmark-light { display: none !important; } .wordmark-dark { display: block !important; } }
 .site-footer { border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; padding: 24px 0; margin-top: 64px; }
+.skip-to-content { position: absolute; top: -40px; left: 0; background: var(--accent); color: #fff; padding: 8px 12px; text-decoration: none; z-index: 100; }
+.skip-to-content:focus { top: 0; }
 @media (max-width: 640px) { .site-header nav a.hide-sm { display: none; } .wordmark-sm img { width: 140px; } }

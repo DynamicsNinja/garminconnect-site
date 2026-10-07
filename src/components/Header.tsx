@@ -8,11 +8,11 @@ export function Header() {
         <Link href="/">
           <Wordmark className="wordmark-sm" />
         </Link>
-        <nav>
-          <a href="/claude">Claude</a>
-          <a href="/docs">Docs</a>
-          <a href="/demo" className="hide-sm">Demo</a>
-          <a href="https://github.com/DynamicsNinja/garminconnect-js" rel="noopener noreferrer" className="hide-sm">GitHub</a>
+        <nav aria-label="Main">
+          <Link href="/claude">Claude</Link>
+          <Link href="/docs">Docs</Link>
+          <Link href="/demo" className="hide-sm">Demo</Link>
+          <a href="https://github.com/DynamicsNinja/garminconnect-js" rel="noopener noreferrer" target="_blank" className="hide-sm">GitHub</a>
         </nav>
         <div id="search-slot" />
       </div>

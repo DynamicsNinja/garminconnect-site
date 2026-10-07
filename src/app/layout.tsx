@@ -14,8 +14,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <body>
+        <a href="#main" className="skip-to-content">Skip to content</a>
         <Header />
-        {children}
+        <main id="main">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>
