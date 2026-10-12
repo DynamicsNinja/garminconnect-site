@@ -30,8 +30,8 @@ export function AskPreview() {
       <div className={styles.answer}>
         <p className={styles.tool}><span className={styles.dot} aria-hidden="true" /> Used <code>get_sleep_data</code> for 14 nights</p>
         <p>
-          You averaged <strong>6 h 52 min</strong> asleep, 21 minutes more than last week. Deep sleep rose on
-          five of seven nights. Thursday was the short one at 5 h 46 min, right after your interval session.
+          You averaged <strong>6 h 52 min</strong> asleep, 21 minutes more than last week. Deep sleep peaked
+          on Saturday at 1 h 45 min. Thursday was the short one at 5 h 46 min, right after your interval session.
         </p>
         <svg className={styles.chart} viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Sleep stages per night, Monday to Sunday">
           {[3, 6, 9].map((h) => (

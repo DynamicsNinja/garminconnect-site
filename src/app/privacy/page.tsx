@@ -41,7 +41,7 @@ export default async function Privacy() {
         </li>
       </ul>
 
-      <h2>The sleep &amp; HRV demo</h2>
+      <h2>The live demo</h2>
       <h3>When you sign in</h3>
       <ul>
         <li>
@@ -62,8 +62,11 @@ export default async function Privacy() {
       <h3>While you&apos;re signed in</h3>
       <ul>
         <li>
-          Each page view reads your recent sleep data (score, duration, HRV, resting heart rate)
-          and your name from Garmin, draws the charts, and discards the data. It is not stored.
+          Each page view reads, for the date range you pick: your sleep (score, duration, stages,
+          HRV, resting heart rate), daily steps and distance, Body Battery levels, your activities
+          (name, start time, distance, duration, heart rate, calories, training effect and load,
+          time in heart-rate zones) and your name. It draws the charts and discards the data. It
+          is not stored.
         </li>
         <li>The demo only reads. It never writes anything to your Garmin account.</li>
       </ul>

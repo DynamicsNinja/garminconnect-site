@@ -9,7 +9,7 @@ import styles from "./page.module.css";
 const STEPS = [
   { title: "Add a custom connector", body: "In Claude, open Settings, then Connectors, and paste the URL above." },
   { title: "Sign in to Garmin", body: "A Garmin window opens. Sign in, with a code if Garmin asks for one." },
-  { title: "Ask", body: "Your phone app picks up the connector from your account automatically." },
+  { title: "Ask", body: "Ask about your sleep, training or workouts. The connector works in the phone app too." },
 ];
 
 // Tool names are the connector's own, so people see what Claude will call.
