@@ -1,35 +1,150 @@
 import Link from "next/link";
+import { codeToHtml } from "shiki";
 import { CopyUrl } from "@/components/CopyUrl";
+import { AskPreview } from "@/components/home/AskPreview";
 import { methods } from "@/lib/reference";
+import "./docs/shiki.css";
 import styles from "./page.module.css";
 
-export default function Home() {
+const STEPS = [
+  { title: "Add a custom connector", body: "In Claude, open Settings, then Connectors, and paste the URL above." },
+  { title: "Sign in to Garmin", body: "A Garmin window opens. Sign in, with a code if Garmin asks for one." },
+  { title: "Ask", body: "Your phone app picks up the connector from your account automatically." },
+];
+
+// Tool names are the connector's own, so people see what Claude will call.
+const ASK = [
+  { topic: "Sleep and recovery", items: [
+    { q: "How did I sleep this week compared with last week?", tools: ["get_sleep_data"] },
+    { q: "What has my HRV done over the last month?", tools: ["get_hrv_data_range"] },
+  ] },
+  { topic: "Training", items: [
+    { q: "Am I ready to train hard today?", tools: ["get_training_readiness"] },
+    { q: "What do my race predictions look like?", tools: ["get_race_predictions"] },
+  ] },
+  { topic: "Workouts", items: [
+    { q: "Build 6×400 m at 4:10/km with 2-minute recoveries and schedule it for Thursday", tools: ["create_workout", "schedule_workout"] },
+  ] },
+  { topic: "Body", items: [
+    { q: "Log 72.4 kg for this morning", tools: ["add_weigh_in"] },
+    { q: "Show my weight and resting heart rate for the past 90 days", tools: ["get_weigh_ins", "get_rhr_daily"] },
+  ] },
+];
+
+const SAMPLE = `import { Garmin, GarminClient, FileTokenStore } from "garminconnect-js";
+
+const client = new GarminClient({
+  tokenStore: new FileTokenStore("./tokens"),
+});
+await client.login(email, password);
+
+const garmin = new Garmin(client);
+const sleep = await garmin.getSleepData("2026-10-11");
+const readiness = await garmin.getTrainingReadiness("2026-10-12");`;
+
+export default async function Home() {
   const count = methods().length;
+  const code = await codeToHtml(SAMPLE, { lang: "ts", themes: { light: "github-light", dark: "github-dark" }, defaultColor: false });
   return (
-    <div className="container">
-      <section className={styles.hero}>
-        <h1>Garmin Connect for Claude and for your code</h1>
-        <p>Ask Claude about your sleep, training and workouts, or build with a zero-dependency TypeScript client.</p>
+    <>
+      <section className={`container ${styles.hero}`}>
+        <div className={styles.heroCopy}>
+          <h1>Ask Claude about your training</h1>
+          <p className={styles.lead}>
+            Connect your Garmin account to Claude in about a minute. Claude reads your sleep, HRV, training
+            status and workouts, and can build and schedule new sessions for your watch.
+          </p>
+          <div className={styles.connect}>
+            <label className={styles.urlLabel} htmlFor="connector-url">Connector URL</label>
+            <CopyUrl url="https://garmin.ficdev.xyz/mcp" id="connector-url" />
+          </div>
+          <div className={styles.actions}>
+            <Link href="/claude" className="btn btn-primary">Set it up</Link>
+            <Link href="#build" className="btn btn-ghost">Build with the npm package</Link>
+          </div>
+          <p className={styles.note}>Free. Works on claude.ai, the phone apps and Claude Desktop.</p>
+        </div>
+        <AskPreview />
       </section>
-      <div className={styles.doors}>
-        <section className={`${styles.card} ${styles.primary}`} aria-labelledby="door-claude">
-          <h2 id="door-claude">Use it in Claude <span className={styles.badge}>no install</span></h2>
-          <CopyUrl url="https://garmin.ficdev.xyz/mcp" />
-          <p className={styles.steps}>1 Add custom connector · 2 Sign in to Garmin · 3 Ask</p>
-          <Link href="/claude" className={`btn btn-primary ${styles.cta}`}>Set it up</Link>
-        </section>
-        <section className={styles.card} aria-labelledby="door-build">
-          <h2 id="door-build">Build with it</h2>
-          <pre><code>npm i garminconnect-js</code></pre>
-          <p className={styles.meta}>{count} methods · TypeScript · Node 18+</p>
-          <Link href="/docs" className={`btn btn-ghost ${styles.cta}`}>Read the docs</Link>
-        </section>
-      </div>
-      <div className={styles.tiles}>
-        <Link href="/claude#ask" className={styles.tile}><strong>What can I ask?</strong><span>Example prompts for sleep, training, workouts and body data.</span></Link>
-        <Link href="/docs/workouts" className={styles.tile}><strong>Workout builder</strong><span>Describe a session once and get a valid Garmin workout.</span></Link>
-        <Link href="/demo" className={styles.tile}><strong>Live demo</strong><span>Try the client against sample data, right in your browser.</span></Link>
-      </div>
-    </div>
+
+      <section className={`container ${styles.section}`} aria-labelledby="steps">
+        <h2 id="steps">Set up in three steps</h2>
+        <ol className={styles.steps}>
+          {STEPS.map((s, i) => (
+            <li key={s.title}>
+              <span className={styles.num} aria-hidden="true">{i + 1}</span>
+              <h3>{s.title}</h3>
+              <p>{s.body}</p>
+            </li>
+          ))}
+        </ol>
+        <p className={styles.more}>Using Claude Code or another MCP client? <Link href="/claude?app=code">See the setup for each app</Link>.</p>
+      </section>
+
+      <section className={`container ${styles.section}`} aria-labelledby="ask">
+        <div className={styles.sectionHead}>
+          <h2 id="ask">What you can ask</h2>
+          <p>Plain questions work. Claude picks the right Garmin tools and shows you which ones it used.</p>
+        </div>
+        <div className={styles.ask}>
+          {ASK.map((g) => (
+            <div key={g.topic} className={styles.askGroup}>
+              <h3>{g.topic}</h3>
+              <ul>
+                {g.items.map((it) => (
+                  <li key={it.q}>
+                    <q>{it.q}</q>
+                    <span className={styles.tools}>{it.tools.map((t) => <code key={t}>{t}</code>)}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <p className={styles.more}><Link href="/claude#ask">More things to ask</Link></p>
+      </section>
+
+      <section id="build" className={styles.build} aria-labelledby="build-title">
+        <div className={`container ${styles.buildInner}`}>
+          <div className={styles.buildCopy}>
+            <h2 id="build-title">Build with it</h2>
+            <p>
+              The same data, in your own code. A typed TypeScript client for Garmin Connect with no runtime
+              dependencies, plus a workout builder that turns a short description into a valid Garmin workout.
+            </p>
+            <dl className={styles.facts}>
+              <div><dt>{count}</dt><dd>methods</dd></div>
+              <div><dt>0</dt><dd>dependencies</dd></div>
+              <div><dt>18+</dt><dd>Node.js</dd></div>
+            </dl>
+            <pre className={styles.install}><code>npm i garminconnect-js</code></pre>
+            <div className={styles.actions}>
+              <Link href="/docs" className="btn btn-primary">Read the docs</Link>
+              <Link href="/demo" className="btn btn-ghost">Try the live demo</Link>
+            </div>
+            <ul className={styles.links}>
+              <li><Link href="/docs/reference">Method reference</Link></li>
+              <li><Link href="/docs/workouts">Workout builder</Link></li>
+              <li><Link href="/docs/self-host">Run the connector yourself</Link></li>
+            </ul>
+          </div>
+          {/* code is highlighted at build time from the constant above */}
+          <div className={styles.code} dangerouslySetInnerHTML={{ __html: code }} />
+        </div>
+      </section>
+
+      <section className={`container ${styles.section}`} aria-labelledby="privacy-title">
+        <div className={styles.sectionHead}>
+          <h2 id="privacy-title">Your data stays yours</h2>
+          <p>Everything is open source, so you can check these against the code.</p>
+        </div>
+        <ul className={styles.privacy}>
+          <li><h3>Your password isn&apos;t kept</h3><p>It goes to Garmin once, when you sign in, and is never stored.</p></li>
+          <li><h3>Your data isn&apos;t kept</h3><p>Garmin data passes straight through to Claude. The server doesn&apos;t save it.</p></li>
+          <li><h3>Unused connections expire</h3><p>The one record per connection is deleted after 35 days without use.</p></li>
+        </ul>
+        <p className={styles.more}><Link href="/privacy">Read the privacy page</Link></p>
+      </section>
+    </>
   );
 }

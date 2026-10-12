@@ -86,12 +86,18 @@ page" list on wide screens; the sidebar collapses to a menu on mobile.
 
 ## 4. Look and feel
 
-- Branding matches the library and the new login page: the README wordmark
-  (`docs/assets/title-light.svg` / `title-dark.svg`, embedded), the `#0969DA → #0A8F7F`
-  gradient for primary actions, GitHub-like neutrals.
+- Branding matches the library: the README wordmark, and the `#0969DA → #0A8F7F` gradient for
+  primary actions.
+- Type: Archivo (variable, with a width axis), self-hosted from `@fontsource-variable/archivo`.
+  Headlines are set wide and heavy, body text at normal width. No third-party font requests.
+- Colour: cool neutrals with a navy ink; heart-rate zone colours appear only in data visuals.
+- Landing: a left-aligned hero with the connector URL beside an example Claude conversation
+  (question, the tool it called, an answer with a sleep-stage chart), then the three setup
+  steps, things to ask with the tools they call, a developer band with code, and privacy facts.
 - Light and dark mode follow the system. Mobile-first; nothing scrolls sideways at 360 px.
+  The only automatic motion is the hero chart on load, and it respects reduced motion.
 - Open Graph image: the library's `docs/assets/social-preview.png`.
-- No analytics, no third-party scripts, no external fonts.
+- No analytics, no third-party scripts.
 - `/claude` steps ship as text; screenshots are a later addition (image files only).
 
 ## 5. The demo
