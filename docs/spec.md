@@ -35,13 +35,14 @@ a developer with npm.
    the site by merging one Dependabot PR.
 3. CI fails if a docs link is broken, a required README section disappears, or a manifest method
    has no reference page.
-4. `https://garmin.ficdev.xyz/demo` behaves exactly like today's demo; `/mcp` is untouched.
+4. `https://garmin.ficdev.xyz/demo` keeps the old demo's modes, sign-in and cookies (existing
+   sessions stay valid); `/mcp` is untouched.
 
 ## 2. Routes
 
 | Route | Content | Source |
 |---|---|---|
-| `/` | Landing: headline, two cards ("Use it in Claude" primary and larger, "Build with it"), then three tiles (What can I ask? · Workout builder · Live demo) | site-authored |
+| `/` | Landing: hero with the connector URL and an example Claude conversation, three setup steps, things to ask, a developer band, privacy facts (see §4) | site-authored |
 | `/claude` | Connector URL + copy button; tabs claude.ai & mobile / Claude Desktop / Claude Code / Other MCP clients (preselected from the user agent); compact 3-step instructions; "Things to ask" grouped by topic; "What's stored"; "Disconnect"; FAQ; link to the Desktop Extension for local use | site-authored, facts from `@dynamicsninja/garminconnect-mcp` README and PRIVACY |
 | `/docs` | Getting started (install, Node runtime only, minimal example) | README sections |
 | `/docs/authentication` | Auth, MFA, token stores | README "Authentication" |
@@ -52,7 +53,7 @@ a developer with npm.
 | `/docs/reference/[method]` | One method: signature, parameters (from JSON schema: type, optional, description), safety class, Connect+, category (links to its guide), Claude tool name | `GARMIN_METHODS` |
 | `/docs/self-host` | Desktop Extension, npm stdio server | `@dynamicsninja/garminconnect-mcp` README |
 | `/docs/changelog` | Release history | `CHANGELOG.md` |
-| `/demo` | Today's demo (sleep & HRV dashboard), moved unchanged in behaviour | copied from the starter |
+| `/demo` | Health dashboard: sleep, recovery (HRV, resting HR, Body Battery) and activity (steps, workouts, HR zones) for 7, 30 or 90 days; sample data until you sign in | started from the starter's demo |
 | `/privacy` | One page: the Claude connector (grant row, nothing else stored) and the demo (cookie-only tokens) | site-authored; replaces the demo's `/privacy` at the same URL |
 | `/mcp`, `/.well-known/oauth-*` | Not this app — the MCP container (Traefik routes by path) | — |
 
@@ -108,6 +109,11 @@ page" list on wide screens; the sidebar collapses to a menu on mobile.
 - Its sign-in form is restyled to the branded login look; its behaviour (rate limit, MFA across
   requests, cookie token store) is unchanged.
 - Cookie path stays `/` so existing sessions remain valid.
+- The dashboard (2026-10-12) reads `getSleepDaily`, `getDailySteps`, `getBodyBattery` (in 28-day
+  windows: Garmin rejects 90 days in one request), `getActivitiesByDate` and `fullName` per page
+  view. Each is optional except an auth error, which shows the sign-in again: one failing
+  endpoint hides its panel, not the page. Visitors who aren't signed in see deterministic sample
+  data from `lib/demo/demo.ts`.
 
 ## 6. Quality gates (CI)
 
@@ -129,5 +135,4 @@ page" list on wide screens; the sidebar collapses to a menu on mobile.
 
 ## 8. Out of scope (v1)
 
-Localisation; versioned docs (the site documents the pinned version only); a blog; a bigger
-demo; screenshots on `/claude`; changes to the MCP server or the library.
+Localisation; versioned docs (the site documents the pinned version only); a blog; screenshots on `/claude`; changes to the MCP server or the library.

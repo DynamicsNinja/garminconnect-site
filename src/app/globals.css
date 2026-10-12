@@ -1,10 +1,10 @@
 :root {
   /* Cool neutrals with a navy ink; the brand gradient (#0969DA to #0A8F7F) is kept for primary actions. */
-  --fg: #0e1a24; --muted: #566573; --faint: #8593a0;
+  --fg: #0e1a24; --muted: #566573; --faint: #63707c;
   --bg: #f4f6f8; --surface: #ffffff; --bg-subtle: #eaeef2; --border: #d6dde4; --border-strong: #b9c3cd;
   --link: #0757b8; --accent: #0969DA; --accent-2: #0A8F7F;
   /* Heart-rate zone colours, used only in data visuals. */
-  --z1: #9fb3c4; --z2: #3d8bf2; --z3: #17a589; --z4: #e8a23b; --z5: #e5534b;
+  --z1: #7f95a8; --z2: #3d8bf2; --z3: #17a589; --z4: #c27c12; --z5: #e5534b;
   --radius: 12px; --radius-lg: 22px;
   --shadow: 0 1px 2px rgb(14 26 36 / 0.06), 0 12px 32px -12px rgb(14 26 36 / 0.18);
   --font: "Archivo Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -13,10 +13,10 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --fg: #e6edf3; --muted: #9aabb9; --faint: #6b7c8b;
+    --fg: #e6edf3; --muted: #9aabb9; --faint: #7d8e9d;
     --bg: #0a131b; --surface: #101d28; --bg-subtle: #152532; --border: #213444; --border-strong: #2e4558;
     --link: #6cb0ff;
-    --z1: #5d7387;
+    --z1: #5d7387; --z4: #e8a23b;
     --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 16px 40px -16px rgb(0 0 0 / 0.6);
   }
 }
@@ -108,5 +108,5 @@ a:hover { text-decoration-thickness: 2px; }
 .search-empty { color: var(--muted); margin: 12px 4px 4px; }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }

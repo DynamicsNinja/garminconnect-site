@@ -3,7 +3,7 @@ import { expect, test, type Page } from "@playwright/test";
 const noSideScroll = async (page: Page) =>
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
 
-test("landing shows both doors and the connector URL", async ({ page }) => {
+test("landing shows the connector URL and both calls to action", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(page.getByLabel("Connector URL")).toHaveValue("https://garmin.ficdev.xyz/mcp");

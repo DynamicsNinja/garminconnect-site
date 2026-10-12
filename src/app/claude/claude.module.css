@@ -51,7 +51,8 @@
   .head { padding-top: 40px; }
   .setup { margin-top: 56px; }
   .section { margin-top: 72px; }
-  .groups, .pair { grid-template-columns: minmax(0, 1fr); gap: 28px; }
-  .pair { gap: 0; }
-  .tablist { display: flex; }
+  .groups { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .pair { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  /* Wrap rather than scroll, so no app is hidden off the edge. */
+  .tablist { display: flex; flex-wrap: wrap; overflow-x: visible; }
 }
