@@ -9,8 +9,14 @@ const SECURITY_HEADERS = [
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
 ];
 
+// The Docker image is built on a Raspberry Pi with 8 GB shared by ~35 containers; three static
+// generation workers there ran it out of memory and took the host down (2026-10-12). The Dockerfile
+// sets NEXT_BUILD_CPUS=1; local builds leave it unset and keep Next's default.
+const buildCpus = Number(process.env.NEXT_BUILD_CPUS) || undefined;
+
 const nextConfig: NextConfig = {
   output: "standalone",
+  ...(buildCpus && { experimental: { cpus: buildCpus } }),
   poweredByHeader: false,
   agentRules: false,
   outputFileTracingRoot: import.meta.dirname,

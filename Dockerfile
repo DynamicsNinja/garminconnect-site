@@ -1,5 +1,7 @@
 FROM node:22-slim AS build
-ENV NEXT_TELEMETRY_DISABLED=1
+# Built on a memory-tight Raspberry Pi: one static generation worker and a capped Node heap
+# (next.config.ts reads NEXT_BUILD_CPUS). Slower, but it cannot starve the host.
+ENV NEXT_TELEMETRY_DISABLED=1 NEXT_BUILD_CPUS=1 NODE_OPTIONS=--max-old-space-size=1536
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
