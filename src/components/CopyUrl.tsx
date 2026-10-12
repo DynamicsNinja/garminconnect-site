@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { copyText } from "@/lib/copy";
 import styles from "./CopyUrl.module.css";
 
-export function CopyUrl({ url }: { url: string }) {
+export function CopyUrl({ url, id }: { url: string; id?: string }) {
   const input = useRef<HTMLInputElement>(null);
   const [status, setStatus] = useState("");
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -25,8 +25,8 @@ export function CopyUrl({ url }: { url: string }) {
   return (
     <div className={styles.wrap}>
       <div className={styles.row}>
-        <input ref={input} className={`${styles.input} mono`} readOnly value={url} aria-label="Connector URL" onFocus={(e) => e.currentTarget.select()} />
-        <button type="button" className="btn btn-ghost" onClick={onCopy}>Copy</button>
+        <input ref={input} id={id} className={`${styles.input} mono`} readOnly value={url} aria-label="Connector URL" onFocus={(e) => e.currentTarget.select()} />
+        <button type="button" className={styles.button} onClick={onCopy}>Copy</button>
       </div>
       <span className={styles.status} aria-live="polite">{status}</span>
     </div>

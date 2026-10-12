@@ -38,10 +38,10 @@ const panels: Record<TabId, React.ReactNode> = {
 };
 
 const ASK = [
-  { title: "Sleep & recovery", prompts: ["How did I sleep this week compared with last week?", "What has my HRV done over the last month?"] },
+  { title: "Sleep and recovery", prompts: ["How did I sleep this week compared with last week?", "What has my HRV done over the last month?"] },
   { title: "Training", prompts: ["Am I ready to train hard today?", "What is my training status, and what do my race predictions look like?"] },
   { title: "Workouts", prompts: ["Build 6×400 m at 4:10/km with 2-minute recoveries and schedule it for Thursday", "Make a 45-minute strength session for legs and add it to my workouts"] },
-  { title: "Body & health", prompts: ["Log 72.4 kg for this morning", "Show my weight and resting heart rate trend for the past 90 days"] },
+  { title: "Body and health", prompts: ["Log 72.4 kg for this morning", "Show my weight and resting heart rate trend for the past 90 days"] },
 ];
 
 const FAQ = [
@@ -60,10 +60,16 @@ export default async function ClaudePage({ searchParams }: PageProps<"/claude">)
     <div className="container">
       <header className={styles.head}>
         <h1>Use your Garmin data in Claude</h1>
-        <p>Free · no install · web, phone and desktop</p>
-        <div><CopyUrl url={URL_} /></div>
+        <p>Free, with nothing to install. Add the connector once and it works on the web, your phone and Claude Desktop.</p>
+        <div>
+          <label className={styles.urlLabel} htmlFor="connector-url">Connector URL</label>
+          <CopyUrl url={URL_} id="connector-url" />
+        </div>
       </header>
-      <ClaudeTabs initial={initial} panels={panels} />
+      <section className={styles.setup} aria-labelledby="setup">
+        <h2 id="setup">Set it up</h2>
+        <ClaudeTabs initial={initial} panels={panels} />
+      </section>
 
       <section id="ask" className={styles.section}>
         <h2>Things to ask</h2>
@@ -71,12 +77,13 @@ export default async function ClaudePage({ searchParams }: PageProps<"/claude">)
           {ASK.map((g) => (
             <div key={g.title} className={styles.group}>
               <h3>{g.title}</h3>
-              <ul>{g.prompts.map((p) => <li key={p}>&ldquo;{p}&rdquo;</li>)}</ul>
+              <ul>{g.prompts.map((p) => <li key={p}><q>{p}</q></li>)}</ul>
             </div>
           ))}
         </div>
       </section>
 
+      <div className={styles.pair}>
       <section id="privacy" className={styles.section}>
         <h2>What&apos;s stored</h2>
         <ul>
@@ -91,9 +98,10 @@ export default async function ClaudePage({ searchParams }: PageProps<"/claude">)
         <h2>Disconnect</h2>
         <p>Remove the connector in Claude, or tick &ldquo;Disconnect my other Garmin connections&rdquo; next time you sign in.</p>
       </section>
+      </div>
 
       <section id="faq" className={`${styles.section} ${styles.faq}`}>
-        <h2>FAQ</h2>
+        <h2>Questions</h2>
         {FAQ.map(([q, a]) => (
           <details key={q}><summary>{q}</summary><p>{a}</p></details>
         ))}
