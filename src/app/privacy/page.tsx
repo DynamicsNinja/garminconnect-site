@@ -33,6 +33,12 @@ export default async function Privacy() {
           <strong>Logs</strong> hold a connection-id prefix, the tool name, a status and a duration
           only.
         </li>
+        <li>
+          <strong>Public usage counts:</strong> <a href="/mcp/stats">/mcp/stats</a> shows how many
+          people and connections there are, per client and per day, plus a daily total kept for the
+          trend. Counts only: no ids, hashes or names, and a client name is shown only once at least
+          three people use it.
+        </li>
       </ul>
 
       <h2>The sleep &amp; HRV demo</h2>
