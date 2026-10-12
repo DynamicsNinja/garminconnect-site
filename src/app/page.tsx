@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { codeToHtml } from "shiki";
-import { CopyUrl } from "@/components/CopyUrl";
-import { AskPreview } from "@/components/home/AskPreview";
 import { methods } from "@/lib/reference";
+import { AskPreview } from "@/components/home/AskPreview";
+import { HeroSwitch } from "@/components/home/HeroSwitch";
 import "./docs/shiki.css";
 import styles from "./page.module.css";
 
@@ -31,41 +31,21 @@ const ASK = [
   ] },
 ];
 
-const SAMPLE = `import { Garmin, GarminClient, FileTokenStore } from "garminconnect-js";
+const SAMPLE = `import { Garmin, GarminClient } from "garminconnect-js";
 
-const client = new GarminClient({
-  tokenStore: new FileTokenStore("./tokens"),
-});
+const client = new GarminClient();
 await client.login(email, password);
 
 const garmin = new Garmin(client);
-const sleep = await garmin.getSleepData("2026-10-11");
-const readiness = await garmin.getTrainingReadiness("2026-10-12");`;
+const sleep = await garmin.getSleepData(date);
+const hrv = await garmin.getHrvData(date);`;
 
 export default async function Home() {
   const count = methods().length;
   const code = await codeToHtml(SAMPLE, { lang: "ts", themes: { light: "github-light", dark: "github-dark" }, defaultColor: false });
   return (
     <>
-      <section className={`container ${styles.hero}`}>
-        <div className={styles.heroCopy}>
-          <h1>Ask Claude about your training</h1>
-          <p className={styles.lead}>
-            Connect your Garmin account to Claude in about a minute. Claude reads your sleep, HRV, training
-            status and workouts, and can build and schedule new sessions for your watch.
-          </p>
-          <div className={styles.connect}>
-            <label className={styles.urlLabel} htmlFor="connector-url">Connector URL</label>
-            <CopyUrl url="https://garmin.ficdev.xyz/mcp" id="connector-url" />
-          </div>
-          <div className={styles.actions}>
-            <Link href="/claude" className="btn btn-primary">Set it up</Link>
-            <Link href="#build" className="btn btn-ghost">Build with the npm package</Link>
-          </div>
-          <p className={styles.note}>Free. Works on claude.ai, the phone apps and Claude Desktop.</p>
-        </div>
-        <AskPreview />
-      </section>
+      <HeroSwitch count={count} code={code}><AskPreview bare /></HeroSwitch>
 
       <section className={`container ${styles.section}`} aria-labelledby="steps">
         <h2 id="steps">Set up in three steps</h2>

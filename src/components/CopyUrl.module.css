@@ -6,9 +6,15 @@
 .row:focus-within { border-color: var(--link); box-shadow: 0 0 0 3px color-mix(in srgb, var(--link) 20%, transparent); }
 .input { flex: 1; min-width: 0; width: 100%; height: 40px; padding: 0 14px; font-size: 15px; color: var(--fg); background: transparent; border: 0; outline: none; text-overflow: ellipsis; }
 .button {
-  flex-shrink: 0; height: 40px; padding: 0 16px; border: 0; border-radius: 8px; cursor: pointer;
+  display: inline-grid; place-items: center; flex-shrink: 0; height: 40px; padding: 0 16px; border: 0; border-radius: 8px; cursor: pointer;
   font: 600 14px/1 var(--font); background: var(--fg); color: var(--bg); transition: opacity 120ms ease;
 }
 .button:hover { opacity: 0.88; }
 .button:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
-.status { position: absolute; left: 2px; top: 100%; margin-top: 6px; line-height: 1; font-size: 13px; color: var(--fg); font-weight: 600; }
+.label { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: 6px; visibility: hidden; }
+.button[data-status="idle"] .label[data-for="idle"],
+.button[data-status="copied"] .label[data-for="copied"],
+.button[data-status="selected"] .label[data-for="selected"] { visibility: visible; }
+.button[data-status="copied"] { background: color-mix(in srgb, var(--accent-2) 80%, #000); color: #fff; }
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
