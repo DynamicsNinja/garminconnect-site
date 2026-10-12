@@ -131,7 +131,7 @@ test.describe("dark mode", () => {
     await expect(home).toHaveAccessibleName("garminconnect-js");
     await expect(home.locator("img")).toHaveCount(1);
     await expect(home.locator("img")).toBeVisible();
-    await expect.poll(() => home.locator("img").evaluate((i: HTMLImageElement) => i.currentSrc)).toContain("title-dark.svg");
+    await expect.poll(() => home.locator("img").evaluate((i: HTMLImageElement) => i.currentSrc)).toContain("name-dark.svg");
   });
 });
 

@@ -8,6 +8,17 @@ describe("brand assets", () => {
     }
     expect(readFileSync("public/brand/social-preview.png").subarray(1, 4).toString()).toBe("PNG");
   });
+  it("has a name-only wordmark for the header: the title's own glyphs, without the tagline", () => {
+    for (const scheme of ["light", "dark"]) {
+      const title = readFileSync(`public/brand/title-${scheme}.svg`, "utf8");
+      const name = readFileSync(`public/brand/name-${scheme}.svg`, "utf8");
+      const paths = (svg: string) => svg.match(/<path [^>]*\/>/g) ?? [];
+      expect(paths(title)).toHaveLength(3);
+      expect(paths(name)).toEqual(paths(title).slice(0, 2));
+      expect(name).toContain('aria-label="garminconnect-js"');
+      expect(name).not.toContain("TypeScript client");
+    }
+  });
   it("uses the brand gradient for primary actions", () => {
     const css = readFileSync("src/app/globals.css", "utf8");
     expect(css).toMatch(/--accent:\s*#0969DA/i);
