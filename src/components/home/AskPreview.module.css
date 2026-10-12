@@ -2,6 +2,7 @@
   margin: 0; position: relative; display: flex; flex-direction: column; gap: 14px; min-width: 0;
   padding: 20px; border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow);
 }
+.bare { padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
 .user { align-self: flex-end; max-width: 86%; }
 .user p { margin: 0; padding: 10px 14px; border-radius: 16px 16px 4px 16px; background: var(--bg-subtle); font-size: 15px; line-height: 1.45; }
 .answer { display: flex; flex-direction: column; gap: 10px; animation: rise 500ms 150ms ease-out both; }

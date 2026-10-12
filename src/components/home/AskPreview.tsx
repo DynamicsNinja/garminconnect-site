@@ -21,9 +21,10 @@ const W = 320, H = 132, TOP = 4, AXIS = 18, MAX = 9 * 60;
 const slot = W / NIGHTS.length, bar = 22;
 const y = (min: number) => (min / MAX) * (H - TOP - AXIS);
 
-export function AskPreview() {
+/** With `bare`, the card chrome is left to the container (the switch hero keeps one frame for both previews). */
+export function AskPreview({ bare = false }: { bare?: boolean }) {
   return (
-    <figure className={styles.panel} aria-label="Example: asking Claude about your sleep">
+    <figure className={bare ? `${styles.panel} ${styles.bare}` : styles.panel} aria-label="Example: asking Claude about your sleep">
       <div className={styles.user}>
         <p>How did I sleep this week compared with last week?</p>
       </div>

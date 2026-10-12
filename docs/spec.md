@@ -42,7 +42,7 @@ a developer with npm.
 
 | Route | Content | Source |
 |---|---|---|
-| `/` | Landing: hero with the connector URL and an example Claude conversation, three setup steps, things to ask, a developer band, privacy facts (see §4) | site-authored |
+| `/` | Landing: a two-sided hero (In Claude / In your code), three setup steps, things to ask, a developer band, privacy facts (see §4) | site-authored |
 | `/claude` | Connector URL + copy button; tabs claude.ai & mobile / Claude Desktop / Claude Code / Other MCP clients (preselected from the user agent); compact 3-step instructions; "Things to ask" grouped by topic; "What's stored"; "Disconnect"; FAQ; link to the Desktop Extension for local use | site-authored, facts from `@dynamicsninja/garminconnect-mcp` README and PRIVACY |
 | `/docs` | Getting started (install, Node runtime only, minimal example) | README sections |
 | `/docs/authentication` | Auth, MFA, token stores | README "Authentication" |
@@ -92,9 +92,12 @@ page" list on wide screens; the sidebar collapses to a menu on mobile.
 - Type: Archivo (variable, with a width axis), self-hosted from `@fontsource-variable/archivo`.
   Headlines are set wide and heavy, body text at normal width. No third-party font requests.
 - Colour: cool neutrals with a navy ink; heart-rate zone colours appear only in data visuals.
-- Landing: a left-aligned hero with the connector URL beside an example Claude conversation
-  (question, the tool it called, an answer with a sleep-stage chart), then the three setup
-  steps, things to ask with the tools they call, a developer band with code, and privacy facts.
+- Landing: a two-sided hero with a switch, "In Claude" (default) and "In your code", so neither
+  audience misses its way in. Claude side: connector URL, Set it up, and an example conversation
+  (question, the tool it called, an answer with a sleep-stage chart). Code side: `npm i`, Read
+  the docs, and a code sample. Both sides share one layout: the field, buttons and preview card
+  never move or resize; only their contents crossfade (180ms). Then the three setup steps,
+  things to ask with the tools they call, a developer band with code, and privacy facts.
 - Light and dark mode follow the system. Mobile-first; nothing scrolls sideways at 360 px.
   The only automatic motion is the hero chart on load, and it respects reduced motion.
 - Open Graph image: the library's `docs/assets/social-preview.png`.

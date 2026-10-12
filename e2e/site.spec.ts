@@ -3,12 +3,22 @@ import { expect, test, type Page } from "@playwright/test";
 const noSideScroll = async (page: Page) =>
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
 
-test("landing shows the connector URL and both calls to action", async ({ page }) => {
+test("landing hero switches between Claude and code without moving", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  const hero = page.locator("#hero-panel");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveAccessibleName("Ask Claude about your training");
   await expect(page.getByLabel("Connector URL")).toHaveValue("https://garmin.ficdev.xyz/mcp");
-  await expect(page.getByRole("link", { name: "Set it up" })).toHaveAttribute("href", "/claude");
-  await expect(page.getByRole("link", { name: "Read the docs" })).toHaveAttribute("href", "/docs");
+  await expect(hero.getByRole("link", { name: "Set it up" })).toHaveAttribute("href", "/claude");
+  const before = await hero.boundingBox();
+
+  await page.getByRole("tab", { name: "In your code" }).click();
+  await expect(page.getByRole("tab", { name: "In your code" })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveAccessibleName("Your Garmin data in your code");
+  await expect(page.getByLabel("Install command")).toHaveValue("npm i garminconnect-js");
+  await expect(hero.getByRole("link", { name: "Read the docs" })).toHaveAttribute("href", "/docs");
+  // The hidden side is out of reach: no Claude link to tab to while the code side shows.
+  await expect(hero.getByRole("link", { name: "Set it up" })).toHaveCount(0);
+  expect(await hero.boundingBox()).toEqual(before);
   await noSideScroll(page);
 });
 
