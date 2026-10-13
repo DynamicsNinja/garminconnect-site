@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: { default: "garminconnect-js: Garmin Connect for Claude and for your code", template: "%s · garminconnect-js" },
   description: "Use your Garmin data in Claude with no install, or build with a zero-dependency TypeScript client for Garmin Connect.",
   openGraph: { images: ["/brand/social-preview.png"] },
+  verification: { google: "25nXUaeY0N3lAfeEIMJAm5g5sl-DBp50oTzM4557wuk" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
