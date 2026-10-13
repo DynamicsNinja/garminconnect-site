@@ -21,6 +21,6 @@ describe("demo paths", () => {
     expect(form).toContain("This demo is part of garmin.ficdev.xyz and runs the open-source");
     const page = readFileSync("src/app/demo/page.tsx", "utf8");
     expect(page).not.toMatch(/<footer/);
-    expect(page).toMatch(/metadata: Metadata = \{ title: "Live demo" \}/);
+    expect(page).toMatch(/title: "Live demo"/);
   });
 });

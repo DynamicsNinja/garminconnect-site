@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import { CopyUrl } from "@/components/CopyUrl";
 import { ClaudeTabs } from "./ClaudeTabs";
@@ -8,7 +9,7 @@ import styles from "./claude.module.css";
 const URL_ = "https://garmin.ficdev.xyz/mcp";
 
 export function generateMetadata(): Metadata {
-  return { title: "Use Garmin in Claude", description: "Add the Garmin connector to Claude on the web, phone, desktop or Claude Code. Free, no install." };
+  return pageMeta({ title: "Use Garmin in Claude", description: "Add the Garmin connector to Claude on the web, phone, desktop or Claude Code. Free, no install.", path: "/claude" });
 }
 
 const webSteps = (

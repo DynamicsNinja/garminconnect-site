@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { codeToHtml } from "shiki";
+import type { Metadata } from "next";
 import { methods } from "@/lib/reference";
+import { libVersion } from "@/lib/docs/sources";
+import { pageMeta } from "@/lib/seo";
+import { SITE_URL } from "@/lib/site";
+import { JsonLd } from "@/components/JsonLd";
 import { AskPreview } from "@/components/home/AskPreview";
 import { HeroSwitch } from "@/components/home/HeroSwitch";
 import "./docs/shiki.css";
@@ -40,11 +45,30 @@ const garmin = new Garmin(client);
 const sleep = await garmin.getSleepData(date);
 const hrv = await garmin.getHrvData(date);`;
 
+export const metadata: Metadata = pageMeta({ path: "/" });
+
+const STRUCTURED = [
+  { "@context": "https://schema.org", "@type": "WebSite", name: "garminconnect-js", url: SITE_URL },
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareSourceCode",
+    name: "garminconnect-js",
+    description: "Unofficial TypeScript client for the Garmin Connect API, for Node and Next.js, with a free Garmin connector for Claude.",
+    url: SITE_URL,
+    codeRepository: "https://github.com/DynamicsNinja/garminconnect-js",
+    programmingLanguage: "TypeScript",
+    runtimePlatform: "Node.js",
+    license: "https://opensource.org/licenses/MIT",
+    version: libVersion(),
+  },
+];
+
 export default async function Home() {
   const count = methods().length;
   const code = await codeToHtml(SAMPLE, { lang: "ts", themes: { light: "github-light", dark: "github-dark" }, defaultColor: false });
   return (
     <>
+      <JsonLd data={STRUCTURED} />
       <HeroSwitch count={count} code={code}><AskPreview bare /></HeroSwitch>
 
       <section className={`container ${styles.section}`} aria-labelledby="steps">

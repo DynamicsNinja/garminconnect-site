@@ -3,6 +3,8 @@ import { Toc } from "@/components/Toc";
 import { hasH1, methodsByRoute, methodsForRoute } from "@/components/doc-data";
 import styles from "@/app/docs/docs.module.css";
 import type { DocPage } from "@/lib/docs/registry";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbs } from "@/lib/seo";
 
 function MethodList({ names }: { names: string[] }) {
   return (
@@ -12,11 +14,22 @@ function MethodList({ names }: { names: string[] }) {
   );
 }
 
+function trail(page: DocPage) {
+  if (page.route === "/docs") return null;
+  return [
+    { name: "Docs", path: "/docs" },
+    ...(page.route.startsWith("/docs/api/") ? [{ name: "API by category", path: "/docs/api" }] : []),
+    { name: page.title, path: page.route },
+  ];
+}
+
 export function DocArticle({ page }: { page: DocPage }) {
   const own = methodsForRoute(page.route);
   const groups = page.route === "/docs/api" ? methodsByRoute() : [];
+  const crumbs = trail(page);
   return (
     <div className={styles.body}>
+      {crumbs && <JsonLd data={breadcrumbs(crumbs)} />}
       <div className={styles.main}>
         {!hasH1(page.html) && <h1 className={styles.pageTitle}>{page.title}</h1>}
         {/* html is rendered from trusted repo sources at build time */}

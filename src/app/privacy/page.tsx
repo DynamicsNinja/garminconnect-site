@@ -1,8 +1,13 @@
 import Link from "next/link";
 import { connection } from "next/server";
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Privacy" };
+export const metadata: Metadata = pageMeta({
+  title: "Privacy",
+  description: "What the Garmin connector for Claude and the garminconnect-js demo store, for how long, and how to disconnect. Open source and unofficial.",
+  path: "/privacy",
+});
 
 /** What this site does with data, stated as facts about the code. Not legal advice. */
 export default async function Privacy() {

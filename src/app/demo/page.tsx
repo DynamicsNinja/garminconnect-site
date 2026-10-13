@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { connection } from "next/server";
 import { GarminAuthError } from "garminconnect-js";
 import { logout } from "@/app/demo/actions";
@@ -12,7 +13,11 @@ import { MODE } from "@/lib/demo/mode";
 import { formatHours, range, shortDate, toNights, type Night } from "@/lib/demo/sleep";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = { title: "Live demo" };
+export const metadata: Metadata = pageMeta({
+  title: "Live demo",
+  description: "Sleep, HRV, training and activity data from Garmin Connect, charted with the garminconnect-js TypeScript client. Explore sample data or sign in to see your own.",
+  path: "/demo",
+});
 
 const RANGES = [7, 30, 90] as const;
 const ZONES = ["var(--z1)", "var(--z2)", "var(--z3)", "var(--z4)", "var(--z5)"];

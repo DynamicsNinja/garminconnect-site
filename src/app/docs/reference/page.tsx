@@ -1,12 +1,17 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { categories, methods } from "@/lib/reference";
 import { libVersion } from "@/lib/docs/sources";
 import { ReferenceTable } from "./ReferenceTable";
 import { MethodTable } from "./MethodTable";
 
 export const dynamic = "force-static";
-export const metadata: Metadata = { title: "Method reference" };
+export const metadata: Metadata = pageMeta({
+  title: "Method reference",
+  description: `All ${methods().length} Garmin Connect API methods in garminconnect-js, the TypeScript client for Node and Next.js: activities, sleep, HRV, workouts, gear and more.`,
+  path: "/docs/reference",
+});
 
 export default function ReferencePage() {
   const rows = methods().map((m) => ({

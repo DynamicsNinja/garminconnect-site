@@ -4,8 +4,9 @@ import { README_PAGES, README_REDIRECTS, splitReadme, normalizeHeading } from ".
 import { apiCategoryFiles, libVersion, readSource } from "./sources";
 import { assertSafeHtml, renderMarkdown, type Rendered } from "./render";
 import type { LinkContext, LinkTarget } from "./links";
+import { describeHtml } from "@/lib/seo";
 
-export interface DocPage { route: string; title: string; html: string; headings: Rendered["headings"]; sourceRepoPath: string }
+export interface DocPage { route: string; title: string; description?: string; html: string; headings: Rendered["headings"]; sourceRepoPath: string }
 
 let cache: Promise<{ pages: Map<string, DocPage>; links: Map<string, LinkTarget[]> }> | null = null;
 
@@ -49,7 +50,7 @@ async function build() {
   const add = async (route: string, title: string, md: string, repoPath: string) => {
     const r = await renderMarkdown(md, repoPath, ctx);
     assertSafeHtml(r.html, route); // fails the build, naming the page
-    pages.set(route, { route, title, html: r.html, headings: r.headings, sourceRepoPath: repoPath });
+    pages.set(route, { route, title, description: describeHtml(r.html), html: r.html, headings: r.headings, sourceRepoPath: repoPath });
     links.set(route, r.links);
   };
   const sections = splitReadme(readme);

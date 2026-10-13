@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { getDocPages } from "@/lib/docs/registry";
 import { DocArticle } from "@/components/DocArticle";
@@ -15,7 +16,8 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps<"/docs/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  return { title: (await getDocPages()).get(`/docs/${slug}`)?.title };
+  const p = (await getDocPages()).get(`/docs/${slug}`);
+  return pageMeta({ title: p?.title, description: p?.description, path: `/docs/${slug}` });
 }
 
 export default async function DocPageRoute({ params }: PageProps<"/docs/[slug]">) {
