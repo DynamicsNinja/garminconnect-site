@@ -13,6 +13,7 @@ export function Footer() {
           <Link href="/claude">Use it in Claude</Link>
           <Link href="/docs">Docs</Link>
           <Link href="/demo">Live demo</Link>
+          <Link href="/stats">Usage stats</Link>
           <Link href="/privacy">Privacy</Link>
           <a href="https://github.com/DynamicsNinja/garminconnect-js" rel="noopener noreferrer" target="_blank">garminconnect-js on GitHub</a>
         </nav>
