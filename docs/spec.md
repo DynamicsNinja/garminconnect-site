@@ -100,7 +100,7 @@ page" list on wide screens; the sidebar collapses to a menu on mobile.
   things to ask with the tools they call, a developer band with code, and privacy facts.
 - Light and dark mode follow the system. Mobile-first; nothing scrolls sideways at 360 px.
   The only automatic motion is the hero chart on load, and it respects reduced motion.
-- Open Graph image: the library's `docs/assets/social-preview.png`.
+- Open Graph image: `public/brand/social-preview.png`, rendered from `docs/social-preview.html` (site-specific; no method count, so it does not go stale).
 - No analytics, no third-party scripts.
 - `/claude` steps ship as text; screenshots are a later addition (image files only).
 

@@ -1,0 +1,74 @@
+<!doctype html>
+<!--
+  Source for public/brand/social-preview.png, the Open Graph image for every page.
+  Regenerate at 1280x640 (from the repo root, with the page served or opened locally):
+    npx playwright screenshot --viewport-size=1280,640 --wait-for-timeout=1500 \
+      docs/social-preview.html public/brand/social-preview.png
+  It deliberately carries no method count, so it does not go stale between releases.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>garminconnect-js social preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=JetBrains+Mono:wght@500&display=block" rel="stylesheet">
+<style>
+  html, body { margin: 0; width: 1280px; height: 640px; overflow: hidden; }
+  body {
+    background: radial-gradient(120% 140% at 85% 15%, #12304a 0%, #0d1117 55%, #0a0d12 100%);
+    color: #e6edf3; font-family: Archivo, sans-serif; position: relative;
+  }
+  .left { position: absolute; left: 72px; top: 0; bottom: 0; width: 600px; display: flex; flex-direction: column; justify-content: center; }
+  .brand { font-weight: 900; font-size: 30px; letter-spacing: -.5px; margin-bottom: 30px; }
+  .grad { background: linear-gradient(90deg, #58a6ff, #2dd4bf); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  h1 { font-weight: 900; font-size: 66px; line-height: .98; letter-spacing: -2px; margin: 0 0 26px; }
+  .sub { font-weight: 500; font-size: 25px; line-height: 1.4; color: #9fb0c0; margin-bottom: 34px; }
+  .url { display: inline-flex; align-items: center; gap: 12px; width: fit-content; font-family: "JetBrains Mono", monospace; font-size: 23px;
+    background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 14px 20px; }
+  .url i { width: 12px; height: 12px; border-radius: 50%; background: #2dd4bf; box-shadow: 0 0 14px #2dd4bf; }
+  .right { position: absolute; right: 64px; top: 66px; width: 500px; }
+  .card { background: rgba(22,27,34,.94); border: 1px solid #30363d; border-radius: 20px; padding: 22px 24px; box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+  .q { margin-left: auto; width: fit-content; background: #1f2630; border-radius: 12px; padding: 10px 15px; font-size: 18px; margin-bottom: 14px; }
+  .used { font-size: 14px; color: #8b98a5; margin-bottom: 8px; }
+  .used code, .code { font-family: "JetBrains Mono", monospace; }
+  .used code { background: #0d1117; border-radius: 5px; padding: 2px 7px; color: #c9d1d9; }
+  .a { font-size: 17px; line-height: 1.45; color: #d0d7de; margin-bottom: 14px; }
+  .bars { display: flex; align-items: flex-end; gap: 12px; height: 92px; }
+  .bar { flex: 1; display: flex; flex-direction: column-reverse; border-radius: 5px; overflow: hidden; }
+  .bar div:nth-child(1) { background: #0969da; } .bar div:nth-child(2) { background: #5b6b7c; }
+  .bar div:nth-child(3) { background: #0f9d84; } .bar div:nth-child(4) { background: #e3a43a; }
+  .code { margin-top: 18px; font-size: 15px; line-height: 1.6; color: #c9d1d9; padding: 18px 22px; }
+  .k { color: #ff7b72; } .f { color: #d2a8ff; } .s { color: #a5d6ff; } .c { color: #8b949e; }
+  svg { position: absolute; left: 0; bottom: 26px; opacity: .6; }
+</style>
+</head>
+<body>
+  <div class="left">
+    <div class="brand">garminconnect<span class="grad">-js</span></div>
+    <h1>Garmin Connect for <span class="grad">Claude</span> and for your code</h1>
+    <div class="sub">A free Garmin connector for Claude, and a typed TypeScript client for Node and Next.js.</div>
+    <div class="url"><i></i>garmin.ficdev.xyz/mcp</div>
+  </div>
+  <div class="right">
+    <div class="card">
+      <div class="q">How did I sleep this week?</div>
+      <div class="used">Used <code>get_sleep_data</code> for 14 nights</div>
+      <div class="a">You averaged <b>6 h 52 min</b> asleep, 21 minutes more than last week.</div>
+      <div class="bars">
+        <div class="bar" style="height:78%"><div style="flex:2"></div><div style="flex:5"></div><div style="flex:2"></div><div style="flex:.3"></div></div>
+        <div class="bar" style="height:74%"><div style="flex:2"></div><div style="flex:5"></div><div style="flex:2"></div><div style="flex:.4"></div></div>
+        <div class="bar" style="height:86%"><div style="flex:2.2"></div><div style="flex:5"></div><div style="flex:2.3"></div><div style="flex:.2"></div></div>
+        <div class="bar" style="height:66%"><div style="flex:1.6"></div><div style="flex:4.6"></div><div style="flex:1.8"></div><div style="flex:.5"></div></div>
+        <div class="bar" style="height:88%"><div style="flex:2.2"></div><div style="flex:5.2"></div><div style="flex:2.4"></div><div style="flex:.2"></div></div>
+        <div class="bar" style="height:96%"><div style="flex:2.8"></div><div style="flex:5.4"></div><div style="flex:2.6"></div><div style="flex:.2"></div></div>
+        <div class="bar" style="height:84%"><div style="flex:2.2"></div><div style="flex:5.2"></div><div style="flex:2.2"></div><div style="flex:.25"></div></div>
+      </div>
+    </div>
+    <div class="card code"><span class="k">const</span> garmin = <span class="k">new</span> <span class="f">Garmin</span>(client);<br><span class="k">const</span> sleep = <span class="k">await</span> garmin.<span class="f">getSleepData</span>(date);<br><span class="k">const</span> hrv = <span class="k">await</span> garmin.<span class="f">getHrvData</span>(date);</div>
+  </div>
+  <svg width="1280" height="60" viewBox="0 0 1280 60">
+    <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#0969da" stop-opacity="0"/><stop offset=".5" stop-color="#58a6ff"/><stop offset="1" stop-color="#2dd4bf" stop-opacity="0"/></linearGradient></defs>
+    <polyline fill="none" stroke="url(#g)" stroke-width="2" points="0,40 560,40 580,26 594,54 612,8 630,48 642,40 1280,40"/>
+  </svg>
+</body>
+</html>
