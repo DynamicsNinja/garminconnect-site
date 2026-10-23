@@ -8,8 +8,11 @@ const METRICS = [
   { id: "users", label: "People", noun: "people connected" },
   { id: "connections", label: "Connections", noun: "connections" },
   { id: "active7d", label: "Active this week", noun: "people active in the 7 days before" },
+  { id: "joined", label: "New", noun: "new people joined" },
 ] as const;
 type Metric = (typeof METRICS)[number]["id"];
+type Day = Stats["daily"][number];
+const value = (d: Day, metric: Metric) => d[metric] ?? 0;
 
 // The viewBox width sets the text size, so phones get a narrower one and the labels stay legible.
 const NARROW = "(max-width: 640px)";
@@ -36,13 +39,15 @@ export function TrendChart({ daily }: { daily: Stats["daily"] }) {
   const [active, setActive] = useState<number | null>(null);
   const narrow = useSyncExternalStore(subscribe, () => window.matchMedia(NARROW).matches, () => false);
   const W = narrow ? 380 : 1000;
-  const m = METRICS.find((x) => x.id === metric)!;
+  const hasJoined = daily.some((d) => d.joined !== undefined);
+  const metrics = METRICS.filter((x) => x.id !== "joined" || hasJoined);
+  const m = metrics.find((x) => x.id === metric) ?? metrics[0]!;
 
   if (daily.length < 2) {
     return <p className={styles.muted}>The trend starts {daily[0] ? `on ${dayLabel(daily[0].day)}` : "with the first daily count"}. Come back tomorrow for a line.</p>;
   }
 
-  const values = daily.map((d) => d[metric]);
+  const values = daily.map((d) => value(d, m.id));
   const yTicks = ticks(Math.max(...values));
   const top = yTicks[yTicks.length - 1]!;
   const x = (i: number) => PAD.left + (i * (W - PAD.left - PAD.right)) / (daily.length - 1);
@@ -62,12 +67,12 @@ export function TrendChart({ daily }: { daily: Stats["daily"] }) {
   return (
     <div>
       <div className={styles.metrics} role="group" aria-label="Show">
-        {METRICS.map((x) => (
-          <button key={x.id} type="button" aria-pressed={x.id === metric} onClick={() => setMetric(x.id)}>{x.label}</button>
+        {metrics.map((x) => (
+          <button key={x.id} type="button" aria-pressed={x.id === m.id} onClick={() => setMetric(x.id)}>{x.label}</button>
         ))}
       </div>
       <p className={styles.readout} aria-live="polite">
-        <b>{point[metric].toLocaleString("en-US")}</b> {m.noun} on {dayLabel(point.day)}
+        <b>{value(point, m.id).toLocaleString("en-US")}</b> {m.noun} on {dayLabel(point.day)}
       </p>
       <svg
         className={styles.trend}
@@ -103,17 +108,17 @@ export function TrendChart({ daily }: { daily: Stats["daily"] }) {
           ) : null)}
         </g>
         <path d={area} fill="url(#trend-fill)" />
-        <path key={metric} d={line} className={styles.line} pathLength={1} />
+        <path key={m.id} d={line} className={styles.line} pathLength={1} />
         <line x1={x(shown)} x2={x(shown)} y1={PAD.top} y2={y(0)} className={styles.crosshair} />
-        <circle cx={x(shown)} cy={y(point[metric])} r={5} className={styles.dot} />
+        <circle cx={x(shown)} cy={y(value(point, m.id))} r={5} className={styles.dot} />
       </svg>
       <details className={styles.table}>
         <summary>Show as a table</summary>
         <table>
-          <thead><tr><th>Day</th><th>People</th><th>Connections</th><th>Active this week</th></tr></thead>
+          <thead><tr><th>Day</th><th>People</th><th>Connections</th><th>Active this week</th>{hasJoined && <th>New</th>}</tr></thead>
           <tbody>
             {[...daily].reverse().map((d) => (
-              <tr key={d.day}><td>{dayLabel(d.day)}</td><td>{d.users}</td><td>{d.connections}</td><td>{d.active7d}</td></tr>
+              <tr key={d.day}><td>{dayLabel(d.day)}</td><td>{d.users}</td><td>{d.connections}</td><td>{d.active7d}</td>{hasJoined && <td>{d.joined ?? 0}</td>}</tr>
             ))}
           </tbody>
         </table>

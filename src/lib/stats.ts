@@ -5,7 +5,8 @@ export interface Stats {
   connections: number;
   active: { day: number; week: number; month: number };
   clients: { name: string; users: number }[];
-  daily: { day: string; users: number; connections: number; active7d: number }[];
+  /** `joined` (people whose first connection was that day) is missing from servers that predate it. */
+  daily: { day: string; users: number; connections: number; active7d: number; joined?: number }[];
 }
 
 export const STATS_URL = process.env.STATS_URL ?? "https://garmin.ficdev.xyz/mcp/stats.json";
