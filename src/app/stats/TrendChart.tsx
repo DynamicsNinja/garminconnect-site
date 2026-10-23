@@ -8,11 +8,14 @@ const METRICS = [
   { id: "users", label: "People", noun: "people connected" },
   { id: "connections", label: "Connections", noun: "connections" },
   { id: "active7d", label: "Active this week", noun: "people active in the 7 days before" },
+  { id: "active1d", label: "Active today", noun: "people active" },
   { id: "joined", label: "New", noun: "new people joined" },
 ] as const;
 type Metric = (typeof METRICS)[number]["id"];
 type Day = Stats["daily"][number];
 const value = (d: Day, metric: Metric) => d[metric] ?? 0;
+/** joined and active1d are missing from older servers; active1d is null on days recorded before it was kept. */
+const OPTIONAL: Metric[] = ["joined", "active1d"];
 
 // The viewBox width sets the text size, so phones get a narrower one and the labels stay legible.
 const NARROW = "(max-width: 640px)";
@@ -34,17 +37,36 @@ function ticks(max: number): number[] {
   return out.length > 1 ? out : [0, step];
 }
 
-export function TrendChart({ daily }: { daily: Stats["daily"] }) {
+export function TrendChart({ daily: all }: { daily: Stats["daily"] }) {
   const [metric, setMetric] = useState<Metric>("users");
   const [active, setActive] = useState<number | null>(null);
   const narrow = useSyncExternalStore(subscribe, () => window.matchMedia(NARROW).matches, () => false);
   const W = narrow ? 380 : 1000;
-  const hasJoined = daily.some((d) => d.joined !== undefined);
-  const metrics = METRICS.filter((x) => x.id !== "joined" || hasJoined);
+  const sent = (id: Metric) => !OPTIONAL.includes(id) || all.some((d) => d[id] !== undefined);
+  const metrics = METRICS.filter((x) => sent(x.id));
   const m = metrics.find((x) => x.id === metric) ?? metrics[0]!;
+  // The line starts on the first day the metric was recorded, not at a made-up zero.
+  const daily = all.filter((d) => d[m.id] != null);
+
+  if (all.length < 2) {
+    return <p className={styles.muted}>The trend starts {all[0] ? `on ${dayLabel(all[0].day)}` : "with the first daily count"}. Come back tomorrow for a line.</p>;
+  }
+
+  const picker = (
+    <div className={styles.metrics} role="group" aria-label="Show">
+      {metrics.map((x) => (
+        <button key={x.id} type="button" aria-pressed={x.id === m.id} onClick={() => setMetric(x.id)}>{x.label}</button>
+      ))}
+    </div>
+  );
 
   if (daily.length < 2) {
-    return <p className={styles.muted}>The trend starts {daily[0] ? `on ${dayLabel(daily[0].day)}` : "with the first daily count"}. Come back tomorrow for a line.</p>;
+    return (
+      <div>
+        {picker}
+        <p className={styles.muted}>{m.label} is counted {daily[0] ? `from ${dayLabel(daily[0].day)}` : "from the next daily count"} on. Come back tomorrow for a line.</p>
+      </div>
+    );
   }
 
   const values = daily.map((d) => value(d, m.id));
@@ -55,7 +77,7 @@ export function TrendChart({ daily }: { daily: Stats["daily"] }) {
   const line = values.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
   const area = `${line}L${x(daily.length - 1).toFixed(1)},${y(0)}L${x(0).toFixed(1)},${y(0)}Z`;
   const every = Math.ceil(daily.length / (narrow ? 3 : 7));
-  const shown = active ?? daily.length - 1;
+  const shown = Math.min(active ?? daily.length - 1, daily.length - 1); // a shorter metric can leave the hovered day past its end
   const point = daily[shown]!;
 
   const onKey = (e: KeyboardEvent) => {
@@ -66,11 +88,7 @@ export function TrendChart({ daily }: { daily: Stats["daily"] }) {
 
   return (
     <div>
-      <div className={styles.metrics} role="group" aria-label="Show">
-        {metrics.map((x) => (
-          <button key={x.id} type="button" aria-pressed={x.id === m.id} onClick={() => setMetric(x.id)}>{x.label}</button>
-        ))}
-      </div>
+      {picker}
       <p className={styles.readout} aria-live="polite">
         <b>{value(point, m.id).toLocaleString("en-US")}</b> {m.noun} on {dayLabel(point.day)}
       </p>
@@ -115,10 +133,10 @@ export function TrendChart({ daily }: { daily: Stats["daily"] }) {
       <details className={styles.table}>
         <summary>Show as a table</summary>
         <table>
-          <thead><tr><th>Day</th><th>People</th><th>Connections</th><th>Active this week</th>{hasJoined && <th>New</th>}</tr></thead>
+          <thead><tr><th>Day</th>{metrics.map((x) => <th key={x.id}>{x.label}</th>)}</tr></thead>
           <tbody>
-            {[...daily].reverse().map((d) => (
-              <tr key={d.day}><td>{dayLabel(d.day)}</td><td>{d.users}</td><td>{d.connections}</td><td>{d.active7d}</td>{hasJoined && <td>{d.joined ?? 0}</td>}</tr>
+            {[...all].reverse().map((d) => (
+              <tr key={d.day}><td>{dayLabel(d.day)}</td>{metrics.map((x) => <td key={x.id}>{d[x.id] ?? ""}</td>)}</tr>
             ))}
           </tbody>
         </table>

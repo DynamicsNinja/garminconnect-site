@@ -5,8 +5,11 @@ export interface Stats {
   connections: number;
   active: { day: number; week: number; month: number };
   clients: { name: string; users: number }[];
-  /** `joined` (people whose first connection was that day) is missing from servers that predate it. */
-  daily: { day: string; users: number; connections: number; active7d: number; joined?: number }[];
+  /**
+   * `joined` (people whose first connection was that day) and `active1d` (people active in the 24 hours before the day's
+   * snapshot) are missing from servers that predate them; `active1d` is null on days recorded before it was kept.
+   */
+  daily: { day: string; users: number; connections: number; active7d: number; active1d?: number | null; joined?: number }[];
 }
 
 export const STATS_URL = process.env.STATS_URL ?? "https://garmin.ficdev.xyz/mcp/stats.json";
