@@ -65,7 +65,7 @@ describe("registry", { timeout: 60_000 }, () => {
     expect(checkLinks(pages, await getAllLinks())).toEqual([]);
   });
   it("uses the pinned library version", () => {
-    expect(libVersion()).toBe("0.9.0");
+    expect(libVersion()).toBe("0.10.0");
   });
   it("highlights code at build time and keeps GitHub anchors", async () => {
     const page = (await getDocPages()).get("/docs")!;

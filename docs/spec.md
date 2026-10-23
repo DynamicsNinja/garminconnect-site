@@ -14,7 +14,7 @@ a developer with npm.
    or the Claude app and need: what it does, the connector URL, three steps, what to ask, and
    whether their data is safe.
 2. Developers using the library. They need install, auth, examples, the workout builder, and a
-   reference for all 193 methods.
+   reference for all 200 methods.
 
 **Decisions made in conversation.**
 - A NEW repo, `DynamicsNinja/garminconnect-site` (name may change). `garminconnect-nextjs-starter`
