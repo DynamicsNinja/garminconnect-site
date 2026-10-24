@@ -14,7 +14,7 @@ export function generateMetadata(): Metadata {
 
 const webSteps = (
   <ol>
-    <li>In claude.ai: Settings → Connectors → Add custom connector. Name it &ldquo;Garmin&rdquo; and paste the URL above.</li>
+    <li>In claude.ai: Customize → Connectors → Add → Add custom connector. Name it &ldquo;Garmin&rdquo;, paste the URL above as the MCP server URL, and click Continue.</li>
     <li>A Garmin sign-in window opens. Sign in, with a code if Garmin asks.</li>
     <li>Ask something. The Claude phone app picks up the connector from your account automatically.</li>
   </ol>
@@ -97,7 +97,7 @@ export default async function ClaudePage({ searchParams }: PageProps<"/claude">)
 
       <section id="disconnect" className={styles.section}>
         <h2>Disconnect</h2>
-        <p>Remove the connector in Claude, or tick &ldquo;Disconnect my other Garmin connections&rdquo; next time you sign in.</p>
+        <p>Remove the connector in Claude (Customize → Connectors), or tick &ldquo;Disconnect my other Garmin connections&rdquo; next time you sign in.</p>
       </section>
       </div>
 
