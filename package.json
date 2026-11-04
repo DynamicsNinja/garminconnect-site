@@ -15,7 +15,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@dynamicsninja/garminconnect-mcp": "0.10.0",
+    "@dynamicsninja/garminconnect-mcp": "0.11.0",
     "@fontsource-variable/archivo": "^5.3.0",
     "@shikijs/rehype": "^4.5.0",
     "garminconnect-js": "0.10.0",
